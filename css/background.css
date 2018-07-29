@@ -1,5 +1,5 @@
 body {
-    background-color: #fbf8ff;
+    background-color: #aa7e5f;
 }
 
 .header {
@@ -48,7 +48,7 @@ body {
 
 .dropdown-menu > a {
     color: white;
-    font-size: 1.5vw;
+    font-size: 1.2vw;
     margin-bottom: 0.5rem;
     font-family: inherit;
     font-weight: 500;
