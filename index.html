@@ -8,7 +8,8 @@
 
     <title>UltRoy - Welcome to Roy's Homepage</title>
     <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/background.css" rel="stylesheet">
+    <link href="css/general.css" rel="stylesheet">
+    <link href="css/bg.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- jQuery CDN -->
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
@@ -16,11 +17,13 @@
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
-
+<div id="loading">
+    <img id="loading-image" src="resource/103.gif" alt="Loading..." />
+</div>
 <div class="wrapper">
-    <div style="position:absolute;z-index:-1;width: 100%; height: 100%">
-        <img src="resource/photo_huashui.jpg" alt="back" class="background-img"/>
-    </div>
+    <!--<div id ="bg" >-->
+        <!--<img src="resource/photo_huashui.jpg" alt="back" class="background-img"/>-->
+    <!--</div>-->
     <!--&lt;!&ndash; Sidebar &ndash;&gt;-->
     <!--<nav id="sidebar" class="active">-->
         <!--&lt;!&ndash; Sidebar Header &ndash;&gt;-->
@@ -80,13 +83,18 @@
             </nav>
         </div>
 
-        <div class="header"  style="clear:both">
-            <h1 style="font-size: 9vw">Lingfeng Guo</h1>
+        <div class="header fade"  style="clear:both">
+            <h1 style="font-size: 8vw">Lingfeng Guo</h1>
+            <h2 class="navbar-text" style="font-size: 2vw;color:white;">Engineering. Designing. Gaming.</h2>
         </div>
     </div>
 
     </div>
 
-<script type="text/javascript" src="js/sticky.js"></script>
+<script language="javascript" type="text/javascript">
+    $(window).load(function() {
+        $('#loading').hide();
+    });
+</script>
 </body>
 </html>
