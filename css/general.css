@@ -16,8 +16,9 @@ body {
 
 #loading-image {
     position: absolute;
-    top: 100px;
-    left: 240px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     z-index: 100;
 }
 .fade {
