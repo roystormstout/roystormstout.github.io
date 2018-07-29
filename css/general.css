@@ -15,10 +15,10 @@ body {
 }
 
 #loading-image {
-    position: absolute;
+    padding: 40vh 0;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
+    text-align: center;
     z-index: 100;
 }
 .fade {
