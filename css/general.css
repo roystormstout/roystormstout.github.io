@@ -1,5 +1,6 @@
 body {
     background-color: transparent;
+    color: #424242;
 }
 #loading {
     width: 100%;
@@ -21,48 +22,18 @@ body {
     text-align: center;
     z-index: 100;
 }
-.fade {
-    opacity: 1;
-    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein 2s; /* Firefox < 16 */
-    -o-animation: fadein 2s; /* Opera < 12.1 */
-    animation: fadein 2s;
-}
 
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
 }
 
-/* Firefox < 16 */
-@-moz-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-/* Internet Explorer */
-@-ms-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-/* Opera < 12.1 */
-@-o-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
 
 .header {
     text-align: center;
     margin: auto;
     padding-top: 15vh;
-    color: white;
+    color: #424242;
 }
 
 
@@ -84,24 +55,6 @@ body {
     /*max-height:100%;*/
     /*width: auto\9;*/
 /*}*/
-#bg {
-    z-index: -1;
-    position: fixed;
-    top: 0;
-    left: 0;
-    max-width: 100%;
-    max-height: 100%;
-}
-#bg img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    min-width: 50%;
-    min-height: 50%;
-}
 
 .nav-personalized {
     background-color: transparent;
@@ -118,11 +71,11 @@ body {
 }
 
 .nav-item > a {
-    color: white;
+    color: #424242;
 }
 
 .dropdown-menu > a {
-    color: white;
+    color: #424242;
     font-size: 1.2vw;
     margin-bottom: 0.5rem;
     font-family: inherit;
@@ -188,4 +141,17 @@ body {
 .hvr-grow:hover, .hvr-grow:focus, .hvr-grow:active {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+}
+
+#projs > div{
+    text-align: center;
+}
+
+#projs > div > img{
+    width: 100%;
+    padding-top: 100%;
+}
+
+.card-subtitle {
+    color: #6c757d;
 }
