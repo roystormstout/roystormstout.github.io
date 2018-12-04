@@ -2,39 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fffe111e-0062-4f0e-a608-5ca09646ada3" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/resource/CV_Guo.pdf" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/resource/Team_Logo.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/resource/cuhk.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/resource/cuhk.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/peterbook.html" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/CNAME" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/css/about.css" afterPath="$PROJECT_DIR$/css/about.css" />
-      <change beforePath="$PROJECT_DIR$/css/bg.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/css/bg_about.css" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-grid.css" afterPath="$PROJECT_DIR$/css/bootstrap-grid.css" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-grid.css.map" afterPath="$PROJECT_DIR$/css/bootstrap-grid.css.map" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-grid.min.css" afterPath="$PROJECT_DIR$/css/bootstrap-grid.min.css" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-grid.min.css.map" afterPath="$PROJECT_DIR$/css/bootstrap-grid.min.css.map" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-reboot.css" afterPath="$PROJECT_DIR$/css/bootstrap-reboot.css" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-reboot.css.map" afterPath="$PROJECT_DIR$/css/bootstrap-reboot.css.map" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-reboot.min.css" afterPath="$PROJECT_DIR$/css/bootstrap-reboot.min.css" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap-reboot.min.css.map" afterPath="$PROJECT_DIR$/css/bootstrap-reboot.min.css.map" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap.css" afterPath="$PROJECT_DIR$/css/bootstrap.css" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap.css.map" afterPath="$PROJECT_DIR$/css/bootstrap.css.map" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/css/bootstrap.min.css" />
-      <change beforePath="$PROJECT_DIR$/css/bootstrap.min.css.map" afterPath="$PROJECT_DIR$/css/bootstrap.min.css.map" />
-      <change beforePath="$PROJECT_DIR$/css/general.css" afterPath="$PROJECT_DIR$/css/general.css" />
       <change beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.bundle.js" afterPath="$PROJECT_DIR$/js/bootstrap.bundle.js" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.bundle.js.map" afterPath="$PROJECT_DIR$/js/bootstrap.bundle.js.map" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.bundle.min.js" afterPath="$PROJECT_DIR$/js/bootstrap.bundle.min.js" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.bundle.min.js.map" afterPath="$PROJECT_DIR$/js/bootstrap.bundle.min.js.map" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.js" afterPath="$PROJECT_DIR$/js/bootstrap.js" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.js.map" afterPath="$PROJECT_DIR$/js/bootstrap.js.map" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.min.js" afterPath="$PROJECT_DIR$/js/bootstrap.min.js" />
-      <change beforePath="$PROJECT_DIR$/js/bootstrap.min.js.map" afterPath="$PROJECT_DIR$/js/bootstrap.min.js.map" />
-      <change beforePath="$PROJECT_DIR$/resource/dof.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/about.html" afterPath="$PROJECT_DIR$/src/about.html" />
+      <change beforePath="$PROJECT_DIR$/src/peterbook.html" afterPath="$PROJECT_DIR$/src/peterbook.html" />
     </list>
     <ignored path="ultroy.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -58,8 +29,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="121">
-              <caret line="66" column="61" lean-forward="false" selection-start-line="66" selection-start-column="61" selection-end-line="66" selection-end-column="110" />
+            <state relative-caret-position="-762">
+              <caret line="30" column="61" lean-forward="false" selection-start-line="30" selection-start-column="61" selection-end-line="30" selection-end-column="61" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -69,11 +40,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="peterbook.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CNAME" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CNAME">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="10" lean-forward="false" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="peterbook.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/peterbook.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
-              <caret line="68" column="6" lean-forward="false" selection-start-line="68" selection-start-column="6" selection-end-line="68" selection-end-column="6" />
+            <state relative-caret-position="257">
+              <caret line="30" column="74" lean-forward="false" selection-start-line="30" selection-start-column="74" selection-end-line="30" selection-end-column="74" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -108,8 +89,8 @@
       <file leaf-file-name="general.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/general.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="61" column="1" lean-forward="true" selection-start-line="61" selection-start-column="1" selection-end-line="61" selection-end-column="1" />
+            <state relative-caret-position="-198">
+              <caret line="61" column="1" lean-forward="false" selection-start-line="61" selection-start-column="1" selection-end-line="61" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -180,8 +161,9 @@
         <option value="$PROJECT_DIR$/css/about.css" />
         <option value="$PROJECT_DIR$/src/about.html" />
         <option value="$PROJECT_DIR$/css/general.css" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/src/peterbook.html" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/CNAME" />
       </list>
     </option>
   </component>
@@ -230,26 +212,6 @@
             <path>
               <item name="ultroy" type="b2602c69:ProjectViewProjectNode" />
               <item name="roystormstout.github.io" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ultroy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="roystormstout.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ultroy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="roystormstout.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ultroy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="roystormstout.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="resource" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ultroy" type="b2602c69:ProjectViewProjectNode" />
-              <item name="roystormstout.github.io" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -791,12 +753,20 @@
       <workItem from="1521941510981" duration="4730000" />
       <workItem from="1532846702457" duration="14742000" />
       <workItem from="1532884719361" duration="3723000" />
-      <workItem from="1543880613771" duration="9873000" />
+      <workItem from="1543880613771" duration="10696000" />
     </task>
+    <task id="LOCAL-00001" summary="renovated">
+      <created>1543916895287</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1543916895287</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49138000" />
+    <option name="totallyTimeSpent" value="49961000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="23" width="1280" height="773" extended-state="6" />
@@ -868,6 +838,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="renovated" />
+    <option name="LAST_COMMIT_MESSAGE" value="renovated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1176,14 +1150,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/general.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="61" column="1" lean-forward="true" selection-start-line="61" selection-start-column="1" selection-end-line="61" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/css/sticky.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="870">
@@ -1192,22 +1158,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="66" column="61" lean-forward="false" selection-start-line="66" selection-start-column="61" selection-end-line="66" selection-end-column="110" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#h1#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/peterbook.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="68" column="6" lean-forward="false" selection-start-line="68" selection-start-column="6" selection-end-line="68" selection-end-column="6" />
+        <state relative-caret-position="257">
+          <caret line="30" column="74" lean-forward="false" selection-start-line="30" selection-start-column="74" selection-end-line="30" selection-end-column="74" />
           <folding>
             <element signature="n#style#0;n#div#1;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1218,6 +1172,34 @@
             <element signature="n#style#0;n#img#2;n#div#0;n#div#5;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#img#3;n#div#0;n#div#5;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/general.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-198">
+          <caret line="61" column="1" lean-forward="false" selection-start-line="61" selection-start-column="1" selection-end-line="61" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-762">
+          <caret line="30" column="61" lean-forward="false" selection-start-line="30" selection-start-column="61" selection-end-line="30" selection-end-column="61" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h1#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNAME">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="10" lean-forward="false" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
