@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fffe111e-0062-4f0e-a608-5ca09646ada3" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/resource/Teal.png" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/killstreak.html" afterPath="$PROJECT_DIR$/src/killstreak.html" />
       <change beforePath="$PROJECT_DIR$/src/projects.html" afterPath="$PROJECT_DIR$/src/projects.html" />
     </list>
     <ignored path="ultroy.iws" />
@@ -29,8 +27,8 @@
       <file leaf-file-name="projects.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/projects.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="60" column="33" lean-forward="true" selection-start-line="60" selection-start-column="33" selection-end-line="60" selection-end-column="33" />
+            <state relative-caret-position="173">
+              <caret line="61" column="22" lean-forward="true" selection-start-line="61" selection-start-column="22" selection-end-line="61" selection-end-column="22" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -775,7 +773,7 @@
       <workItem from="1545312058462" duration="4881000" />
       <workItem from="1547488436562" duration="323000" />
       <workItem from="1550276957029" duration="194000" />
-      <workItem from="1561656771457" duration="10170000" />
+      <workItem from="1561656771457" duration="10211000" />
     </task>
     <task id="LOCAL-00001" summary="renovated">
       <created>1543916895287</created>
@@ -819,11 +817,18 @@
       <option name="project" value="LOCAL" />
       <updated>1561696309200</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="teal">
+      <created>1561704083121</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1561704083121</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67237000" />
+    <option name="totallyTimeSpent" value="67278000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -902,7 +907,8 @@
     <MESSAGE value="updated for new projects" />
     <MESSAGE value="updated for movienet" />
     <MESSAGE value="updated killstreak" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated killstreak" />
+    <MESSAGE value="teal" />
+    <option name="LAST_COMMIT_MESSAGE" value="teal" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1253,8 +1259,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/projects.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="60" column="33" lean-forward="true" selection-start-line="60" selection-start-column="33" selection-end-line="60" selection-end-column="33" />
+        <state relative-caret-position="173">
+          <caret line="61" column="22" lean-forward="true" selection-start-line="61" selection-start-column="22" selection-end-line="61" selection-end-column="22" />
           <folding>
             <element signature="n#style#0;n#div#1;n#nav#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#2;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
