@@ -40,45 +40,75 @@
                 <h1 style="font-size: 7vw">KillStreak</h1>
                 <h2 class="navbar-text" >OpenGL-Based Online Multi-player Battle Arena</h2>
             </div>
-            <img  class="p-3 card-img-top rounded-circle col-4" style="height: 100%" src="../resource/warrior_icon.png" alt="Card image cap">
+            <img  class="p-1 card-img-top rounded-circle col-4" style="height: 100%" src="../resource/warrior_icon.png" alt="Card image cap">
         </div>
         <div class="dropdown-divider"></div>
-        <div class="p-3 container mb-4">
+        <div class="p-1 container mb-4">
             <h1 >Gameplay</h1>
-            <p class="container p-3">
+            <p class="container ">
                 KillStreak is a real time battle arena separated into five rounds.
                 Each round is separated into Prepare Phase and Kill Phase.
                 Players will be awarded points based on each round's ranking.
                 After five rounds, the player with most points wins.
             </p>
-            <div class="p-3 container mb-4">
+            <div class="container">
                 <h2>Prepare Phase</h2>
-                <p class="container p-3">
-                    There are three operations in the Prepare Phase: upgrade, bet, and cheat. All operations require gold.
-                    Normally, gold is acquired by killing others in the kill phase. Some amount of base gold is also awarded each turn.
-                    Upgrade allows the players to get stronger.
-                    Bet allows the players to spend any amount of gold to bet on the winner of next round. The amount is
-                    doubled if they are correct, but they lose the amount if they bet on the wrong person.
-                    Cheat requires more gold, as it can be used to exchange points toward victory.
-                    It enables different strategies based on how the players spend their gold each turn.
+                <p class="container p-1">
+                    There are three options available in the Prepare Phase: upgrading, betting, and "cheating".
+                    Normally, gold is acquired by killing others in the kill phase.
+                    Some amount of base gold is also awarded each turn.
+                    Upgrading enables the players to get stronger.
+                    Betting allows the players to bet on who will be the winner of the next round.
+                    The gold is doubled if that player ended up in the first place,
+                    but they lose the amount if they bet on the wrong person.
+                    "Cheating" is the function where players use a great amount of gold in exchange for victory points.
+                    All three operations enable different strategic plays each turn.
                 </p>
             </div>
-            <div class="p-3 container mb-4">
+            <div class="container">
                 <h2>Kill Phase</h2>
-                <p class="container p-3">
-                    In kill phase, players have ninety seconds to battle other players and earn gold.
+                <p class="container p-1">
+                    In kill phase, players have ninety seconds to battle against other players.
                     At the end of the kill phase, points are awarded based on the rankings of numbers of kills.
                 </p>
             </div>
         <div class="dropdown-divider"></div>
-        <div class="p-3 container mb-4 ">
-            <h1>My Role - Gameplay & Front-End</h1>
+        <div class="p-1 container mb-4 ">
+            <h1>My Role</h1>
+                <div class="container">
+            <h2>Game Design</h2>
+            <p class="p-1">
+               I am in charge of designing characters and their skills.
+                Throughout the process, I want to design three characters that having a triangle countering relationship and
+                one character that is a wild card. We ended up with Warrior > Assassin > Mage > Warrior, and King is the wild card.
+                In economy system design, we want to balance the advantage of being skilled in the game and the advantage of
+                strategic plays(e.g. tanking). We ended up with some good numbers for different rewards.
+            </p>
+                </div>
+            <div class="container">
+                <h2>Gameplay</h2>
+                <p class="p-1">
+                   I implemented the "click-n-go" control system by calculating the camera distance with the ground distance,
+                    transforming the clicked point from the screen space to the ground in the world space.
+                    I also implemented an efficient physics system from scratch.
+                    It is a variation from AABB collision testing, featuring different object shapes.
+                    I choose AABB to optimize the server tick time.
 
+                </p>
+            </div>
+            <div class="container">
+                <h2>Front-End</h2>
+                <p class="p-1">
+                    For the front-end part, I used OpenGL to render all the special effects, including particle effects and invisibility.
+                    Wrote and bind different kinds of shaders for different objects.
+                    Designed and implemented all the user interfaces.
+                </p>
+            </div>
         </div>
 
 
         <div class="dropdown-divider"></div>
-            <div class="p-3 container mb-4 ">
+            <div class="p-1 container mb-4 ">
                 <h1>Development Process</h1>
                 <div class="container">
                 <h2>Early Ideas Formation</h2>
@@ -92,29 +122,32 @@
 
                 </div>
 
-                <div class="container">
-                    <h2>Characters Skills</h2>
-                    <p>
-                    </p>
+            </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="p-3 container mb-4 ">
+            <h1>Presentation Video</h1>
+            <div class="row justify-content-around m-4 container">
+                <iframe width="960" height="540"
+                        src="https://www.youtube.com/embed/7GEG_zKTBqk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                </iframe>
 
-                </div>
             </div>
         </div>
         <div class="dropdown-divider"></div>
 
-        <div class="p-3 container mb-4 ">
+        <div class="p-1 container mb-4 ">
                 <h1>Screenshots</h1>
             <div class="container">
-
                 <img class="pb-2" style="width: 100%;" src="../resource/ks_ingame.png" alt="ingame"/>
                 <img class="pb-2" style="width: 100%;" src="../resource/lobbybg.jpg" alt="ingame" />
                 <img class="pb-2" style="width: 100%;" src="../resource/loading_page_king.png" alt="ingame"/>
-                <!-- 我們守著距離 拉成的相思 溫柔著彼此的言辭 -->
                 <img class="pb-2" style="width: 100%;" src="../resource/ks_testing.jpg" alt="ingame"/>
             </div>
             </div>
         <div class="dropdown-divider"></div>
 
     </div>
+</div>
 </body>
 </html>
