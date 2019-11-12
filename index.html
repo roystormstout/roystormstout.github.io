@@ -28,6 +28,8 @@
         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
         <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
     </ol>
     <div class="carousel-inner">
         <div class="carousel-item active">
@@ -47,7 +49,7 @@
         </div>
         <div class="carousel-item">
             <div  class="d-block w-100">
-            <div class="text-center m-5"> <h1 class="neon-heading third"> Work Experience and Academics</h1> </div>
+            <div class="text-center mt-5"> <h1 class="neon-heading third"> Work Experience and Academics</h1> </div>
             <main class="timeline">
                 <p>2017 <br/> Microsoft Research Asia, Machine Learning Intern, Beijing, China <br/>  Researched on machine learning approaches used in information-asymmetric games </p>
                 <p>2018 <br/> TuSimple, Software Engineering Intern, San Diego, United States <br/>
@@ -62,10 +64,10 @@
         </div>
         <div class="carousel-item">
             <div  class="d-block w-100">
-                <div class="text-center mt-5"> <h1 class="neon-heading third"> KillStreak</h1> </div>
+                <div class="text-center mt-5 pb-4"> <h1 class="neon-heading third"> KillStreak</h1> </div>
                 <div class="text-center"> <h2 class="neon-heading third">a MOBA game developed in OpenGL</h2> </div>
                 <div class="container pt-2">
-                <div class="row mt-5 align-items-center justify-content-between">
+                <div class="row mt-5 pb-5 align-items-center justify-content-between">
                     <div class="col-2">
                         <!--<img  class="p-1 card-img-top rounded-circle" src="resource/warrior_icon.png" alt="Card image cap">-->
                         <a class="neon-wrapper p-3" data-toggle="modal" data-target="#killstreakdemo">
@@ -80,8 +82,67 @@
                                 src="https://www.youtube.com/embed/7GEG_zKTBqk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
                         </iframe>
                     </div>
-                    <p></p>
                 </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div  class="d-block w-100">
+                <div class="text-center mt-5 pb-4"> <h1 class="neon-heading third"> PeterBook </h1> </div>
+                <div class="text-center"> <h2 class="neon-heading third"> Secured Web-based Social Media </h2> </div>
+                <div class="container p-4 pb-5">
+                    <div class="row mt-5 pb-5 align-items-center justify-content-between">
+                        <div class="col-10">
+                            <h2 style="line-height: 1.65;"> Peterbook is a project I lead in an advanced software development class.<br/>
+                                It is designed to build a private,secured communication channel among users. <br/>
+                                The application supports friend circle posts and 1-to-1 messages. <br/>
+                                <br/>
+                                My role is the project manager and full-stack engineer.<br/>
+                                <br/>
+                                Technology used: <br/> Jenkins, ReactJS, Google KMS, Google AdSense
+                                <br/>
+                            </h2>
+                        </div>
+                        <div class="col-2">
+                            <!--<img  class="p-1 card-img-top rounded-circle" src="resource/warrior_icon.png" alt="Card image cap">-->
+
+                            <a class="neon-wrapper p-3" style="color: white" href="https://github.com/hurenxu/TeamSolid/wiki" target="_blank">
+                                <h2 class=" neon-heading second"> WIKI</h2>
+                            </a>
+                            <a class="d-inline-block mt-5 p-3"  href="https://github.com/hurenxu/TeamSolid" target="_blank">
+                                <h2 class=" neon-heading third "> CODE</h2>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div  class="d-block w-100">
+                <div class="text-center mt-5 pb-3"> <h1 class="neon-heading third"> A Graph-Based Framework to Bridge Movies and Synopses</h1> </div>
+                <div class="text-center"> <h2 class="neon-heading third"> Accepted by ICCV 2019 (oral)  </h2> </div>
+                <div class="container p-1 ">
+                    <div class="row mt-5 pb-5 align-items-center justify-content-between">
+                        <div class="col-5">
+                            <p style="line-height: 2">
+                                ABSTRACT:<br/>
+                                Inspired by the remarkable advances in video analytics,
+                                research teams are stepping towards a greater ambition -- movie understanding.
+                                However, compared to those activity videos in conventional datasets, movies are significantly different.
+                                Generally, movies are much longer and consist of much richer temporal structures. More importantly, the interactions among characters play a central role in expressing the underlying story.
+                                To facilitate the efforts along this direction, we construct a dataset called Movie Synopses Associations (MSA) over 327 movies, which provides a synopsis for each movie,
+                                together with annotated associations between synopsis paragraphs and movie segments. On top of this dataset, we develop a framework to perform matching between movie segments and synopsis paragraphs.
+                                This framework integrates different aspects of a movie, including event dynamics and character interactions, and allows them to be matched with parsed paragraphs, based on a graph-based formulation.
+                                Our study shows that the proposed framework remarkably improves the matching accuracy over conventional feature-based methods.
+                            </p>
+                        </div>
+                        <div class="col-7">
+                            <img style="width: 100%;" src="resource/SYNOPSIS.png" alt="syn"/>
+                            <a class="neon-wrapper p-3 m-5" style="color: white; text-align: right" href="https://arxiv.org/abs/1910.11009" target="_blank">
+                                <h2 class=" neon-heading second"> PAPER</h2>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,15 +166,15 @@
                     <span aria-hidden="true" class="neon-heading third">&times;</span>
                 </button>
             </div>
-            <div class="modal-body p-5">
-                <h2>
+            <div class="modal-body pb-5">
+                <h2 class="pb-5">
                     Game Design:<br/>
                     1 Hit-point fighting, character skill sets, economics system <br/>
                     <br/>
                     Technical: <br/>
                     Constructed an efficient physics engine with mesh collision<br/>
                     Developed mouse click control for character movement that is robust to the camera changes <br/>
-                    Implemented movement prediction to avoid glitches caused by lower server-tick rate<br/>
+                    Implemented movement prediction to avoid glitches caused by low server-tick rate<br/>
                     Designed and implemented the user interfaces <br/>
                 </h2>
             </div>
