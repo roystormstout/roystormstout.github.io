@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css?family=Dosis:200,400');
+* {
+    color: #fff;
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+}
+.neon-wrapper {
+    display: inline-block;
+}
+
+.neon-wrapper-popup {
+    box-shadow:
+            0 0 0.1vw  0.4vw #fff7f7,
+            0 0 0.4vw  0.6vw #33FF00,
+            0 0   4vw  0.4vw  #33FF00,
+            inset 0 0 1.5vw  0.4vw  #33FF00,
+            inset 0 0 0.4vw  0.2vw  #33FF00,
+            inset 0 0 0.5vw  0.2vw #fff7f7;
+    border-radius: 0.5rem;
+}
+
+
+.neon-wrapper:hover {
+    display: inline-block;
+    box-shadow:
+            0 0 0.1vw  0.4vw #fff7f7,
+            0 0 0.4vw  0.6vw #33FF00,
+            0 0   4vw  0.4vw  #33FF00,
+            inset 0 0 1.5vw  0.4vw  #33FF00,
+            inset 0 0 0.4vw  0.2vw  #33FF00,
+            inset 0 0 0.5vw  0.2vw #fff7f7;
+    border-radius: 1.5rem;
+}
+
+h1.neon-heading {
+    color: #fff;
+    font-family: 'Dosis', Calibri, sans-serif;
+    text-transform: uppercase;
+    font-size: 200px;
+    font-weight: 200;
+    text-align: center;
+}
+h1.neon-heading.first {
+    text-shadow: 0px 0px 10px #9D00FF,
+    0px 0px 20px #9D00FF,
+    0px 0px 30px #9D00FF,
+    0px 0px 40px #9D00FF,
+    0px 0px 50px #9D00FF,
+    0px 0px 60px #9D00FF;
+}
+
+h1.neon-heading.third {
+    font-size: 70px;
+    text-shadow: 0px 0px 10px #00a0aa,
+    0px 0px 20px #00a0aa,
+    0px 0px 30px #00a0aa,
+    0px 0px 40px #00a0aa,
+    0px 0px 50px #00a0aa,
+    0px 0px 60px #00a0aa;
+}
+
+h1.neon-heading.second {
+    font-size: 130px;
+    text-shadow: 0px 0px 10px #33FF00,
+    0px 0px 20px #33FF00,
+    0px 0px 30px #33FF00,
+    0px 0px 40px #33FF00,
+    0px 0px 50px #33FF00,
+    0px 0px 60px #33FF00;
+    animation: pulsating 3s infinite;
+}
+
+.neon-heading.second {
+    font-size: 40px;
+    text-shadow: 0px 0px 10px #33FF00,
+    0px 0px 20px #33FF00,
+    0px 0px 30px #33FF00,
+    0px 0px 40px #33FF00,
+    0px 0px 50px #33FF00,
+    0px 0px 60px #33FF00;
+    animation: pulsating 3s infinite;
+}
+
+.neon-heading.third {
+    font-size: 30px;
+    text-shadow: 0px 0px 10px #00a0aa,
+    0px 0px 20px #00a0aa,
+    0px 0px 30px #00a0aa,
+    0px 0px 40px #00a0aa,
+    0px 0px 50px #00a0aa,
+    0px 0px 60px #00a0aa;
+}
+
+
+
+.neon-heading.second:hover,.neon-heading.second:focus,.neon-heading.second:active {
+    text-shadow: 0px 0px 10px #33FF00,
+    0px 0px 20px #33FF00,
+    0px 0px 30px #33FF00,
+    0px 0px 40px #33FF00,
+    0px 0px 50px #33FF00,
+    0px 0px 60px #33FF00;
+    animation: unset;
+}
+
+
+/* FLICKERING */
+span.flickering-1 {
+    animation: flickering-1 6s infinite;
+}
+span.flickering-2 {
+    animation: flickering-2 3s infinite;
+}
+span.flickering-3 {
+    animation: flickering-3 5s infinite;
+}
+
+/* ANIMATIONS */
+@keyframes pulsating {
+    0% {
+        text-shadow: 0px 0px 0px;
+        opacity: 0;
+    }
+    50% {
+        text-shadow: 0px 0px 10px #33FF00,
+        0px 0px 20px #33FF00,
+        0px 0px 30px #33FF00,
+        0px 0px 40px #33FF00,
+        0px 0px 50px #33FF00,
+        0px 0px 60px #33FF00;
+        opacity: 1;
+    }
+    100% {
+        text-shadow: 0px 0px 0px;
+        opacity: 0;
+    }
+}
+
+@keyframes flickering-1 {
+    0% { opacity: 1; }
+    52% { opacity: 1; }
+    55% { opacity: 0; }
+    56% { opacity: 1; }
+    100% { opacity: 1; }
+}
+
+@keyframes flickering-2 {
+    0% { opacity: 1; }
+    62% { opacity: 1; }
+    65% { opacity: 0; }
+    66% { opacity: 1; }
+    69% { opacity: 0; }
+    70% { opacity: 1; }
+    73% { opacity: 0; }
+    74% { opacity: 1; }
+    100% { opacity: 1; }
+}
+
+@keyframes flickering-3 {
+    0% { opacity: 1; }
+    82% { opacity: 1; }
+    84% { opacity: 0; }
+    85% { opacity: 1; }
+    87% { opacity: 0; }
+    88% { opacity: 1; }
+    90% { opacity: 0; }
+    91% { opacity: 1; }
+    100% { opacity: 1; }
+}
