@@ -1,0 +1,139 @@
+{
+  "main": {
+    "name":"Roy Guo",
+    "occupation":"Master of Engineering student at UC Berkeley, majoring in Computer Science",
+    "description":"My goal is to learn through interactions with others and make contributions to the world through my work",
+    "image":"profilepic.jpg",
+    "bio":"The main focuses of my work are 3D Graphics, Human-Computer Interaction, Game Development, and AR/VR Technologies. Previously I have worked at Microsoft and TuSimple as a software engineering intern for Summer 2017 and Fall 2017 respectively.",
+    "contactmessage":"",
+    "email": "royguo97@gmail.com",
+    "phone": "555-555-5555",
+    "address":{
+      "street":"(Your Street)",
+      "city":"Berkeley",
+      "state":"(Your State)",
+      "zip": "(Your Zip/Postal Code)"
+    },
+    "website": "http://www.ultroy.com",
+    "resumedownload":"ROY.pdf",
+    "social":[
+      {
+        "name":"linkedin",
+        "url":"https://www.linkedin.com/in/glfeng/",
+        "className":"fa fa-linkedin"
+      },
+      {
+        "name":"github",
+        "url":"https://github.com/roystormstout/",
+        "className":"fa fa-github"
+      }
+    ]
+  },
+  "resume":{
+    "skillmessage":"My skills include most major programming languages, multi-platform app development and game development. ",
+    "education":[
+      {
+        "school":"University of California, Berkeley",
+        "degree":"Master of Engineering",
+        "graduated":"August 2019 - May 2020",
+        "description":"Researcher at Vive Center for Enhanced Reality at UC Berkeley. I am developing AR/VR solutions to various problems, such as autonomous driving."
+      },
+      {
+        "school":"University of California, San Diego",
+        "degree":"Bachelor of Science",
+        "graduated":"September 2015 - June 2019",
+        "description":"I was a tutor at UCSD's Computer Science & Engineering Department, teaching data science, data structures, Python, and Java. I worked across different software projects, including games, web applications, and mobile applications."
+      }
+    ],
+    "work":[
+      {
+        "company":"A Graph-based Framework to Bridge Movies and Synopses",
+        "title":"Oral Presentation at ICCV 2019",
+        "years":"July 2018 - October 2018",
+        "description":"Constructed a dataset called Movie Synopses Associations (MSA) over 328 movies. Developed a framework to perform matching between movie segments and synopsis paragraphs. Using React and Flask, built and designed a cross-platform tool for movie-related labeling jobs. Using motion energy model, pre-processed raw movie data and movie info into segments and keyframes."
+      },
+      {
+        "company":"TuSimple",
+        "title":"Software Engineer Intern",
+        "years":"October 2017 - March 2018",
+        "description":"Developed a web tool for the truck movement simulation using ReactJS and Redux. Built a MongoDB database to store simulation results. "
+      },
+      {
+        "company":"Microsoft Research Asia",
+        "title":"Machine Learning Intern",
+        "years":"June 2017 - August 2017",
+        "description":"Developed on early stage of Suphx, the world's strongest Mahjong AI, whose stable rank is 17% higher than top human player's. Researched on reinforcement learning approaches, such as prior coaching, to optimize information-asymmetric games. Using Qt, built a game log visualizer to track the model's decision-making processes."
+      }
+    ],
+    "skills":[
+      {
+        "name":"Git",
+        "level":"90%"
+      },
+      {
+        "name":"C/C++",
+        "level":"85%"
+      },
+      {
+        "name":"Javascript",
+        "level":"80%"
+      },
+      {
+        "name":"HTML/CSS",
+        "level":"90%"
+      },
+      {
+        "name":"Java",
+        "level":"80%"
+      },
+      {
+        "name":"OpenGL",
+        "level":"75%"
+      },
+      {
+        "name":"Unity3D",
+        "level":"86%"
+      },
+      {
+        "name":"MongoDB",
+        "level":"60%"
+      }
+    ]
+  },
+  "portfolio":{
+    "projects": [
+      {
+        "title":"Ironman",
+        "category":"VR solution for tele-operating RC car",
+        "image":"ironman-demo.jpg",
+        "url":"https://youtu.be/1GCu01k9Wrw"
+      },
+      {
+        "title":"KillStreak",
+        "category":"OpenGL based Multiplayer Online Battle Arena",
+        "image":"ks_ingame.jpg",
+        "url":"https://youtu.be/7GEG_zKTBqk"
+      },
+      {
+        "title":"Peterbook",
+        "category":"Secured Multiplatform Social Network",
+        "image":"Peterbook_Login.jpg",
+        "url":"https://github.com/hurenxu/TeamSolid/wiki"
+      },
+      {
+        "title":"A Happy Ending",
+        "category":"Virtual Reality First Person Horror Game. The winner of \"Most Polished Game\" and \"Best Sound Effects\" awards in the all-campus VR game competition",
+        "image":"a_happy_ending.jpg",
+        "url":"https://youtu.be/wpFDd7CqIZQ"
+      }
+    ]
+  },
+  "testimonials":{
+    "testimonials":[
+      {
+        "text":"To live is the rarest thing in the world. Most people exist, that is all.",
+        "user":"Oscar Wilde"
+      }
+    ]
+  }
+}
