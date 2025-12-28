@@ -1,0 +1,282 @@
+import { useState, useEffect } from 'react';
+import TypedTitle from './TypedTitle';
+
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  link?: string;
+}
+
+interface ModalProject extends Project {
+  fullDescription: string;
+}
+
+
+const projects: Project[] = [
+  {
+    id: '1',
+    title: "A Graph-Based Framework to Bridge Movies and Synopses",
+    description:
+      "Constructed the Movie Synopses Associations (MSA) dataset spanning 328 films. Designed a graph-based framework to align movie segments with corresponding synopsis paragraphs. Built a cross-platform labeling and annotation tool using React and Flask to support movie analysis workflows. Applied a motion energy model to preprocess raw video data into temporal segments and representative keyframes.",
+    image:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=600&fit=crop",
+    link:
+      "https://openaccess.thecvf.com/content_ICCV_2019/papers/Xiong_A_Graph-Based_Framework_to_Bridge_Movies_and_Synopses_ICCV_2019_paper.pdf",
+  },
+  {
+    id: '2',
+    title: "Suphx: The World’s Strongest Mahjong AI",
+    description:
+      "Contributed to the early development of Suphx, a state-of-the-art Mahjong AI that consistently outperforms top human players by a 17% stable rank margin. Conducted research on reinforcement learning techniques, including prior coaching, to address decision-making in information-asymmetric games. Developed a Qt-based game log visualizer to analyze and interpret the model’s strategic decisions.",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=600&fit=crop",
+    link:
+      "https://www.microsoft.com/en-us/research/project/suphx-mastering-mahjong-with-deep-reinforcement-learning/",
+  },
+  {
+    id: '3',
+    title: "KillStreak",
+    description:
+      "Designed and developed an OpenGL-based multiplayer online battle arena (MOBA) game. Implemented a custom physics engine with coarse mesh collision to optimize server tick rates. Developed precise mouse-based movement controls by transforming coordinates from screen space to world space. Implemented client-side rendering prediction to mitigate latency and network instability. Designed core gameplay systems, including character abilities, in-game economy, and user interfaces such as skill indicators and pre-match preparation flows.",
+    image:
+      "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=600&fit=crop",
+    link: "#",
+  },
+  {
+    id: '4',
+    title: "IRONMAN",
+    description:
+      "Developed a virtual reality solution for remote tele-operation of RC cars. Built a Unity3D-based VR application using the Oculus SDK to enable immersive vehicle control. Implemented real-time bidirectional data streaming between the VR system and physical RC cars using ROS (Robot Operating System). Designed intuitive control schemes and interfaces to improve operator precision and usability. Served as a simulation and testing platform for computer vision–driven autonomy research in the ROAR Lab.",
+    image:
+      "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=600&fit=crop",
+    link: "https://roar.berkeley.edu/",
+  },
+  {
+    id: '6',
+    title: "A Happy Ending",
+    description:
+      "Developed a first-person virtual reality horror game that won both the “Most Polished Game” and “Best Sound Effects” awards in an all-campus VR game competition. Implemented player locomotion and interaction systems using the Oculus controller API. Designed interactive environmental mechanics, including trigger-based doors using linear interpolation. Authored the narrative structure and gameplay progression, scripting chapter-based events and contextual trigger logic.",
+    image:
+      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=600&fit=crop",
+    link: "#",
+  },
+];
+
+export default function Portfolio() {
+  const [selectedProject, setSelectedProject] = useState<ModalProject | null>(null);
+  const [visibleProjects, setVisibleProjects] = useState<Set<string>>(new Set());
+  const [hoveredProject, setHoveredProject] = useState<string | null>(null);
+
+  const projectsWithFullDescription: ModalProject[] = projects.map(p => ({
+    ...p,
+    fullDescription: `${p.description}. This project showcases advanced techniques in ${p.technologies[0]} and demonstrates best practices in modern web development. Built with attention to performance, accessibility, and user experience.`
+  }));
+
+  const handleProjectClick = (project: Project) => {
+    const fullProject = projectsWithFullDescription.find(p => p.id === project.id);
+    if (fullProject) {
+      setSelectedProject(fullProject);
+    }
+  };
+
+  const closeModal = () => {
+    setSelectedProject(null);
+  };
+
+  useEffect(() => {
+    const observerOptions: IntersectionObserverInit = {
+      threshold: 0.1,
+      rootMargin: '0px',
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const id = (entry.target as HTMLElement).dataset.projectId;
+        if (!id) return;
+
+        if (entry.isIntersecting) {
+          setVisibleProjects((prev) => new Set([...prev, id]));
+        } else {
+          setVisibleProjects((prev) => {
+            const updated = new Set(prev);
+            updated.delete(id);
+            return updated;
+          });
+        }
+      });
+    }, observerOptions);
+
+    const projectElements = document.querySelectorAll('[data-project-id]');
+    projectElements.forEach((element) => {
+      observer.observe(element);
+    });
+
+    return () => {
+      projectElements.forEach((element) => {
+        observer.unobserve(element);
+      });
+    };
+  }, []);
+
+  return (
+    <>
+      <style>{`
+        @keyframes floatCard {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-16px);
+          }
+        }
+      `}</style>
+      <section
+        id="portfolio"
+        className="relative px-4 sm:px-6 py-12 sm:py-16 md:py-24 z-20 mx-4 sm:mx-8 md:mx-16 lg:mx-32 my-16 sm:my-24 md:my-32 min-h-screen"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        <div className="w-full max-w-6xl mx-auto">
+          <TypedTitle text="PORTFOLIO" className="mb-8 sm:mb-12 md:mb-16" />
+
+          {/* Dynamic Grid Layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12 lg:gap-16 auto-rows-max">
+            {projects.map((project) => (
+              <div
+                key={project.id}
+                data-project-id={project.id}
+                className={`project group relative overflow-hidden rounded-lg cursor-pointer transform transition-all duration-500 hover:scale-105 ${
+                  visibleProjects.has(project.id)
+                    ? 'animate-popIn opacity-100 scale-100'
+                    : 'opacity-0 scale-75'
+                }`}
+                onClick={() => handleProjectClick(project)}
+                                onMouseEnter={() => setHoveredProject(project.id)}
+                onMouseLeave={() => setHoveredProject(null)}
+                style={{
+                  aspectRatio: '1 / 1',
+                  boxShadow: hoveredProject === project.id ? '0 16px 48px rgba(255, 210, 120, 0.5), 0 8px 24px rgba(255, 210, 120, 0.4)' : 'none',
+                  animation: hoveredProject === project.id ? 'floatCard 2s ease-in-out infinite' : 'none',
+                }}
+              >
+                {/* Image */}
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 group-hover:scale-110 transition-all duration-300 flex flex-col justify-end p-4 sm:p-6 opacity-0 group-hover:opacity-100">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    {project.title}
+                  </h3>
+                  <div className="flex flex-wrap gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    {project.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="text-xs px-2 py-1 rounded-full"
+                        style={{
+                          background: 'rgba(94, 225, 255, 0.2)',
+                          color: 'var(--accent-cyan)',
+                          border: '1px solid rgba(94, 225, 255, 0.4)',
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Modal */}
+      {selectedProject && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 sm:p-6 backdrop-blur-sm"
+          onClick={closeModal}
+        >
+          <div
+            className="rounded-lg max-w-2xl w-full max-h-[85vh] sm:max-h-[90vh] overflow-y-auto"
+            style={{ backgroundColor: 'var(--bg-secondary)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Image */}
+            <div className="w-full aspect-video sm:aspect-square overflow-hidden">
+              <img
+                src={selectedProject.image}
+                alt={selectedProject.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <h2
+                    className="text-xl sm:text-2xl md:text-3xl font-bold mb-2"
+                    style={{ color: 'var(--text-primary)', letterSpacing: '0.02em' }}
+                  >
+                    {selectedProject.title}
+                  </h2>
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="transition-colors ml-4 text-2xl"
+                  style={{ color: 'var(--text-tertiary)' }}
+                  aria-label="Close modal"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6" style={{ color: 'var(--text-secondary)' }}>
+                {selectedProject.fullDescription}
+              </p>
+
+              {/* Technologies */}
+              <div className="mb-4 sm:mb-6">
+                <h3 className="text-sm sm:text-base font-semibold mb-2 sm:mb-3" style={{ color: 'var(--text-secondary)' }}>Technologies</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProject.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm"
+                      style={{
+                        background: 'rgba(94, 225, 255, 0.15)',
+                        color: 'var(--accent-cyan)',
+                        border: '1px solid rgba(94, 225, 255, 0.3)',
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA */}
+              {selectedProject.link && (
+                <a
+                  href={selectedProject.link}
+                  className="inline-block px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: 'rgba(94, 225, 255, 0.2)',
+                    color: 'var(--accent-cyan)',
+                    border: '1px solid rgba(94, 225, 255, 0.4)',
+                  }}
+                >
+                  View Project →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
