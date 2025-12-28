@@ -1,0 +1,14 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer mon circle -->
+  <circle cx="256" cy="256" r="224" stroke="currentColor" stroke-width="24"></circle>
+
+  <!-- Stylized U / blade form -->
+  <path d="M176 144
+       V304
+       C176 352 208 384 256 384
+       C304 384 336 352 336 304
+       V144" stroke="currentColor" stroke-width="28" stroke-linecap="square" stroke-linejoin="miter"></path>
+
+  <!-- Diagonal blade slash -->
+  <path d="M192 272 L320 192" stroke="currentColor" stroke-width="20" stroke-linecap="square"></path>
+</svg>
