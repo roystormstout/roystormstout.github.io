@@ -77,50 +77,50 @@ export default function NavBar() {
             
             {/* Bottom border - expands from center on hover */}
             <span
-              className={`absolute left-1/2 bottom-0 h-0.5 transition-all duration-300 ease-out -translate-x-1/2 ${
+              className={`absolute left-1/2 bottom-0 h-0.5 w-full transition-transform duration-300 ease-out -translate-x-1/2 ${
                 activeSection === item.id
-                  ? 'w-full'
-                  : 'w-0 group-hover:w-full'
+                  ? 'scale-x-100'
+                  : 'scale-x-0 group-hover:scale-x-100'
               }`}
-              style={{ backgroundColor: 'var(--text-primary)' }}
+              style={{ backgroundColor: 'var(--text-primary)', willChange: 'transform', backfaceVisibility: 'hidden' }}
             />
             
             {/* Left border - expands from bottom on active */}
             <span
-              className={`absolute left-0 bottom-0 w-0.5 transition-all duration-300 ease-out origin-bottom ${
+              className={`absolute left-0 bottom-0 w-0.5 h-full transition-transform duration-300 ease-out origin-bottom ${
                 activeSection === item.id
-                  ? 'h-full'
-                  : 'h-0'
+                  ? 'scale-y-100'
+                  : 'scale-y-0'
               }`}
-              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '150ms' : '0ms' }}
+              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '150ms' : '0ms', willChange: 'transform', backfaceVisibility: 'hidden' }}
             />
             
             {/* Right border - expands from bottom on active */}
             <span
-              className={`absolute right-0 bottom-0 w-0.5 transition-all duration-300 ease-out origin-bottom ${
+              className={`absolute right-0 bottom-0 w-0.5 h-full transition-transform duration-300 ease-out origin-bottom ${
                 activeSection === item.id
-                  ? 'h-full'
-                  : 'h-0'
+                  ? 'scale-y-100'
+                  : 'scale-y-0'
               }`}
-              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '150ms' : '0ms' }}
+              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '150ms' : '0ms', willChange: 'transform', backfaceVisibility: 'hidden' }}
             />
             
             {/* Top border - expands from both corners on active */}
             <span
-              className={`absolute left-0 top-0 h-0.5 transition-all duration-300 ease-out ${
+              className={`absolute left-0 top-0 h-0.5 w-1/2 transition-transform duration-300 ease-out origin-left ${
                 activeSection === item.id
-                  ? 'w-1/2'
-                  : 'w-0'
+                  ? 'scale-x-100'
+                  : 'scale-x-0'
               }`}
-              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '300ms' : '0ms' }}
+              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '300ms' : '0ms', willChange: 'transform', backfaceVisibility: 'hidden' }}
             />
             <span
-              className={`absolute right-0 top-0 h-0.5 transition-all duration-300 ease-out ${
+              className={`absolute right-0 top-0 h-0.5 w-1/2 transition-transform duration-300 ease-out origin-right ${
                 activeSection === item.id
-                  ? 'w-1/2'
-                  : 'w-0'
+                  ? 'scale-x-100'
+                  : 'scale-x-0'
               }`}
-              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '300ms' : '0ms' }}
+              style={{ backgroundColor: 'var(--text-primary)', transitionDelay: activeSection === item.id ? '300ms' : '0ms', willChange: 'transform', backfaceVisibility: 'hidden' }}
             />
           </button>
           );

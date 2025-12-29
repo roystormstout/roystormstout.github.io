@@ -109,28 +109,31 @@ export default function Bio() {
       >
         <div className="relative">
           <h1 
-            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-bold bg-clip-text relative z-20 transition-transform duration-100" 
+            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-bold bg-clip-text relative z-20" 
             style={{
               color: 'var(--text-primary)',
               transform: `translateY(${scrollY * -0.05}px)`,
+              willChange: 'transform',
             }}
           >
             ROY GUO
           </h1>
           <h2 
-            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10 transition-transform duration-100" 
+            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10" 
             style={{
               color: 'var(--text-tertiary)',
               transform: `translateY(${scrollY * -0.3}px)`,
+              willChange: 'transform',
             }}
           >
             DEV
           </h2>
           <h2 
-            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10 transition-transform duration-100" 
+            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10" 
             style={{
               color: 'var(--text-tertiary)',
               transform: `translateY(${scrollY * -0.45}px)`,
+              willChange: 'transform',
             }}
           >
             CREATOR
