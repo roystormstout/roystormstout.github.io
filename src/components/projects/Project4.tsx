@@ -43,7 +43,7 @@ export default function Project4({ isEven, isVisible }: ProjectProps) {
     >
       {/* Image */}
       <div className="w-full lg:w-1/2 flex-shrink-0">
-        <div ref={artRef} className="relative rounded-lg overflow-hidden shadow-2xl aspect-square flex items-center justify-center">
+        <div ref={artRef} className="relative overflow-hidden aspect-square flex items-center justify-center">
           <style>
             {`
               @keyframes raceIn {

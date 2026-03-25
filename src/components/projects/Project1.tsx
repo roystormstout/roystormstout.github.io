@@ -45,7 +45,7 @@ export default function Project1({ isEven, isVisible }: ProjectProps) {
     >
       {/* Image */}
       <div className="w-full lg:w-1/2 flex-shrink-0">
-        <div ref={artRef} className="relative rounded-lg overflow-hidden shadow-2xl group aspect-square">
+        <div ref={artRef} className="relative overflow-hidden group aspect-square">
           {/* Moon - slides in from top */}
           <img
             src={MoonImg}

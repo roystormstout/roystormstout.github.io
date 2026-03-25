@@ -47,7 +47,7 @@ export default function Project5({ isEven, isVisible }: ProjectProps) {
       <div className="w-4/5 lg:w-1/3 flex-shrink-0 m-12 lg:m-26">
         <div 
           ref={artRef}
-          className="relative rounded-lg overflow-hidden shadow-2xl aspect-square cursor-pointer"
+          className="relative overflow-hidden aspect-square cursor-pointer"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >

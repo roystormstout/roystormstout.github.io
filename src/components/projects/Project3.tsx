@@ -46,31 +46,73 @@ export default function Project3({ isEven, isVisible }: ProjectProps) {
     >
       {/* Art / Video */}
       <div className="w-full lg:w-1/2 flex-shrink-0" style={{ backgroundColor: 'var(--bg-primary)' }}>
-        <div ref={artRef} className="relative rounded-lg overflow-hidden shadow-2xl group aspect-video flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <div ref={artRef} className="relative overflow-hidden group aspect-video flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
           <style>
             {`
               @keyframes float {
-                0%, 100% { transform: scale(1.3) translateY(0); }
-                50% { transform: scale(1.3) translateY(-10px); }
+                0%, 100% { transform: scale(1.25) translateY(0); }
+                50% { transform: scale(1.25) translateY(-10px); }
               }
             `}
           </style>
           {!showVideo ? (
-            <img
-              src={isHovered ? MageCastImg : MageImg}
-              alt="Mage character"
-              className="h-3/4 object-contain cursor-pointer transition-all duration-300"
+            <div className="flex flex-col items-center cursor-pointer h-full"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
               onClick={() => setShowVideo(true)}
-              style={{
-                transform: artVisible ? (isHovered ? 'scale(1.3)' : 'scale(1)') : 'scale(0.9)',
-                opacity: artVisible ? 1 : 0,
-                transitionDuration: '300ms',
-                filter: isHovered ? 'drop-shadow(0 0 20px rgba(94, 225, 255, 0.7)) drop-shadow(0 0 40px rgba(94, 225, 255, 0.4))' : 'none',
-                animation: isHovered ? 'float 2s ease-in-out infinite' : 'none',
-              }}
-            />
+            >
+              <div className="relative flex-1 min-h-0 flex items-center justify-center w-full">
+              <img
+                src={MageImg}
+                alt="Mage character"
+                className="max-h-[60%] object-contain transition-all duration-300"
+                style={{
+                  transform: artVisible ? 'scale(1)' : 'scale(0.9)',
+                  opacity: artVisible ? (isHovered ? 0 : 1) : 0,
+                  transitionDuration: '300ms',
+                  animation: isHovered ? 'float 2s ease-in-out infinite' : 'none',
+                }}
+              />
+              <img
+                src={MageCastImg}
+                alt="Mage character casting"
+                className="max-h-[70%] object-contain transition-all duration-300 absolute"
+                style={{
+                  transform: artVisible ? (isHovered ? 'scale(1.25)' : 'scale(1)') : 'scale(0.9)',
+                  opacity: artVisible ? (isHovered ? 1 : 0) : 0,
+                  transitionDuration: '300ms',
+                  filter: isHovered ? 'drop-shadow(0 0 10px rgba(94, 225, 255, 0.35)) drop-shadow(0 0 20px rgba(94, 225, 255, 0.15))' : 'none',
+                  animation: isHovered ? 'float 2s ease-in-out infinite' : 'none',
+                }}
+              />
+              </div>
+              {/* Click prompt */}
+              <div
+                className="mt-3 transition-all duration-500 pointer-events-none"
+                style={{
+                  opacity: artVisible ? (isHovered ? 0 : 0.8) : 0,
+                  transform: artVisible
+                    ? `translateY(${isHovered ? '8px' : '0'})`
+                    : 'translateY(12px)',
+                }}
+              >
+                <div
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold tracking-widest uppercase whitespace-nowrap"
+                  style={{
+                    color: 'var(--accent-cyan)',
+                    border: '1px solid var(--accent-cyan)',
+                    backgroundColor: 'rgba(94, 225, 255, 0.08)',
+                    backdropFilter: 'blur(4px)',
+                    letterSpacing: '0.12em',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 18l8-10 8 10z" />
+                  </svg>
+                  Click for video
+                </div>
+              </div>
+            </div>
           ) : (
             <>
               <iframe
@@ -85,7 +127,7 @@ export default function Project3({ isEven, isVisible }: ProjectProps) {
                 className="rounded-lg"
               />
               <button
-                onClick={() => setShowVideo(false)}
+                onClick={() => { setShowVideo(false); setIsHovered(false); }}
                 className="absolute top-3 right-3 p-2 rounded-full bg-black/60 hover:bg-black/80 transition-colors duration-200 cursor-pointer"
                 title="Back to art"
               >
