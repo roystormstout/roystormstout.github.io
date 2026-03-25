@@ -105,7 +105,7 @@ export default function Bio() {
       >
       <div
         ref={contentRef}
-        className="max-w-full text-center relative z-10 w-full justify-end justify-self-end flex flex-col items-center px-4"
+        className="max-w-full text-center relative z-10 w-full justify-end justify-self-end flex flex-col items-center px-4 -mt-24"
       >
         <div className="relative">
           <h1 
@@ -119,7 +119,7 @@ export default function Bio() {
             ROY GUO
           </h1>
           <h2 
-            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10" 
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10" 
             style={{
               color: 'var(--text-tertiary)',
               transform: `translateY(${scrollY * -0.3}px)`,
@@ -129,7 +129,7 @@ export default function Bio() {
             DEV
           </h2>
           <h2 
-            className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10" 
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10" 
             style={{
               color: 'var(--text-tertiary)',
               transform: `translateY(${scrollY * -0.45}px)`,
