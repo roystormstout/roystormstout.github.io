@@ -18,12 +18,23 @@ type Props = {
   swingRotation?: number;
   boardShadow?: boolean;
   onPointerDown?: React.PointerEventHandler<HTMLDivElement>;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
+  role?: string;
+  tabIndex?: number;
+  ariaLabel?: string;
 };
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'w-20 sm:w-28 md:w-40 lg:w-56 xl:w-72',
-  md: 'w-24 sm:w-32 md:w-48 lg:w-64 xl:w-80',
-  lg: 'w-28 sm:w-40 md:w-56 lg:w-80 xl:w-[20rem]',
+  sm: '',
+  md: '',
+  lg: '',
+};
+
+const sizeWidths: Record<Size, string> = {
+  sm: 'clamp(5rem, min(16vw, 20vh), 14rem)',
+  md: 'clamp(6rem, min(22vw, 27vh), 18rem)',
+  lg: 'clamp(7rem, min(26vw, 31vh), 20rem)',
 };
 
 export default function DecorativePatch({
@@ -42,6 +53,11 @@ export default function DecorativePatch({
   swingRotation = 0,
   boardShadow = false,
   onPointerDown,
+  onClick,
+  onKeyDown,
+  role,
+  tabIndex,
+  ariaLabel,
 }: Props) {
   const [hovering, setHovering] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -145,8 +161,14 @@ export default function DecorativePatch({
       ref={containerRef}
       className={`${sizeClasses[size]} ${className || ''}`}
       onPointerDown={onPointerDown}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      role={role}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
       style={{
         position: 'absolute',
+        width: sizeWidths[size],
         height: 'auto',
         cursor: draggable ? (isDragging ? 'grabbing' : 'grab') : undefined,
         touchAction: draggable ? 'none' : undefined,

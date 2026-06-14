@@ -1,0 +1,14 @@
+export const MAX_SWING = 18;
+export const SWING_FORCE = 1.4;
+export const SWING_TENSION = 0.08;
+export const SWING_DAMPING = 0.86;
+export const FLIP_DURATION_MS = 900;
+export const CLICK_MOVE_THRESHOLD = 6;
+export const NOTE_WIDTH = 760;
+export const NOTE_HEIGHT = 760;
+export const NOTE_DOCK_HEIGHT = 150;
+export const MIN_NOTE_DOCK_HEIGHT = 96;
+export const MAX_NOTE_DOCK_HEIGHT = 172;
+export const NOTE_DOCK_HEIGHT_RATIO = 0.21;
+export const NOTE_CONTENT_GAP = 6;
+export const NOTE_TEXT_DELAY_MS = 260;

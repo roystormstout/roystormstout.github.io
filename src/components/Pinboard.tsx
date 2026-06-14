@@ -1,92 +1,27 @@
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
-import DecorativePatch from './DecorativePatch';
-import PatchController from '../assets/patch_game_controller.png';
-import PatchTemple from '../assets/patch_temple.png';
-import PatchCorgi from '../assets/patch_corgi.png';
-import PatchAussie from '../assets/patch_aus.png';
-
-const MAX_SWING = 18;
-const SWING_FORCE = 1.4;
-const SWING_TENSION = 0.08;
-const SWING_DAMPING = 0.86;
-const FLIP_DURATION_MS = 900;
-
-type PatchId = 'controller' | 'temple' | 'aussie' | 'corgi';
-type BoardSide = 'professional' | 'hobby';
-
-type PatchPosition = {
-  x: number;
-  y: number;
-};
-
-type DragState = PatchPosition & {
-  id: PatchId;
-  width: number;
-  height: number;
-  currentX: number;
-  currentY: number;
-  lastClientX: number;
-  lastClientY: number;
-  lastTime: number;
-  velocityX: number;
-  velocityY: number;
-};
-
-type PinboardProps = {
-  onClose: () => void;
-};
-
-type PinConfig = {
-  id: PatchId;
-  image: string;
-  size: 'md' | 'lg';
-  initialRotate: number;
-  hoverRotate: number;
-  anchor: CSSProperties;
-};
-
-const boardPins: Record<BoardSide, PinConfig[]> = {
-  professional: [
-    {
-      id: 'temple',
-      image: PatchTemple,
-      size: 'md',
-      initialRotate: -9,
-      hoverRotate: -4,
-      anchor: { left: 'clamp(28px, 8vw, 120px)', top: 'clamp(92px, 14vh, 124px)' },
-    },
-    {
-      id: 'controller',
-      image: PatchController,
-      size: 'md',
-      initialRotate: 12,
-      hoverRotate: 6,
-      anchor: { right: 'clamp(28px, 8vw, 112px)', top: 'clamp(100px, 15vh, 132px)' },
-    },
-  ],
-  hobby: [
-    {
-      id: 'aussie',
-      image: PatchAussie,
-      size: 'lg',
-      initialRotate: 7,
-      hoverRotate: 2,
-      anchor: { left: 'clamp(26px, 9vw, 138px)', bottom: 'clamp(74px, 10vh, 104px)' },
-    },
-    {
-      id: 'corgi',
-      image: PatchCorgi,
-      size: 'lg',
-      initialRotate: -8,
-      hoverRotate: -2,
-      anchor: { right: 'clamp(26px, 9vw, 132px)', bottom: 'clamp(74px, 10vh, 104px)' },
-    },
-  ],
-};
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import './pinboard/Pinboard.css';
+import BoardFace from './pinboard/BoardFace';
+import PinboardHeader from './pinboard/PinboardHeader';
+import PinboardScene from './pinboard/PinboardScene';
+import PinLayer from './pinboard/PinLayer';
+import PinNote from './pinboard/PinNote';
+import { boardPins } from './pinboard/data';
+import useBoardSize from './pinboard/hooks/useBoardSize';
+import {
+  CLICK_MOVE_THRESHOLD,
+  FLIP_DURATION_MS,
+  MAX_SWING,
+  MAX_NOTE_DOCK_HEIGHT,
+  MIN_NOTE_DOCK_HEIGHT,
+  NOTE_CONTENT_GAP,
+  NOTE_DOCK_HEIGHT_RATIO,
+  NOTE_TEXT_DELAY_MS,
+  SWING_DAMPING,
+  SWING_FORCE,
+  SWING_TENSION,
+} from './pinboard/constants';
+import { clamp, getNoteLayoutForSize, getNotePinPositionForSize } from './pinboard/layout';
+import type { BoardSide, DragState, PatchId, PatchPosition, PinboardProps, SelectedPin } from './pinboard/types';
 
 export default function Pinboard({ onClose }: PinboardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
@@ -94,37 +29,106 @@ export default function Pinboard({ onClose }: PinboardProps) {
   const swingFrame = useRef<number | null>(null);
   const patchSizes = useRef<Partial<Record<PatchId, { width: number; height: number }>>>({});
   const flipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const selectedPinRef = useRef<SelectedPin | null>(null);
+  const isFlippingRef = useRef(false);
+  const lastInteractionMoved = useRef(false);
   const [activeSide, setActiveSide] = useState<BoardSide>('professional');
   const [draggingPatch, setDraggingPatch] = useState<PatchId | null>(null);
   const [isFlipping, setIsFlipping] = useState(false);
+  const [selectedPin, setSelectedPin] = useState<SelectedPin | null>(null);
+  const [noteTextReady, setNoteTextReady] = useState(false);
+  const boardSize = useBoardSize(boardRef);
   const [patchPositions, setPatchPositions] = useState<Partial<Record<PatchId, PatchPosition>>>({});
   const [patchSwings, setPatchSwings] = useState<Partial<Record<PatchId, number>>>({});
 
+  const getNoteLayout = useCallback(() => {
+    return getNoteLayoutForSize(boardSize.width, boardSize.height);
+  }, [boardSize.height, boardSize.width]);
+
+  const isPointInsideNote = useCallback((x: number, y: number) => {
+    const note = getNoteLayout();
+
+    return x >= note.x && x <= note.x + note.width && y >= note.y && y <= note.y + note.height;
+  }, [getNoteLayout]);
+
+  const getNotePinPosition = useCallback((width: number, height: number): PatchPosition => {
+    return getNotePinPositionForSize(boardSize.width, boardSize.height, width, height);
+  }, [boardSize.height, boardSize.width]);
+
+  function getDockHeight() {
+    return clamp(boardSize.height * NOTE_DOCK_HEIGHT_RATIO, MIN_NOTE_DOCK_HEIGHT, MAX_NOTE_DOCK_HEIGHT);
+  }
+
+  const attachPinToNote = useCallback((side: BoardSide, id: PatchId, previousPosition: PatchPosition, width: number, height: number) => {
+    const nextPosition = getNotePinPosition(width, height);
+
+    setPatchPositions((positions) => ({
+      ...positions,
+      ...(selectedPinRef.current && selectedPinRef.current.id !== id
+        ? { [selectedPinRef.current.id]: selectedPinRef.current.previousPosition }
+        : {}),
+      [id]: nextPosition,
+    }));
+    setNoteTextReady(false);
+    setSelectedPin({ side, id, previousPosition });
+  }, [getNotePinPosition]);
+
+  function detachPinFromNote() {
+    const pin = selectedPinRef.current;
+
+    if (!pin) return;
+
+    setPatchPositions((positions) => ({
+      ...positions,
+      [pin.id]: pin.previousPosition,
+    }));
+    lastInteractionMoved.current = false;
+    setNoteTextReady(false);
+    setSelectedPin(null);
+  }
+
   useEffect(() => {
-    function handleResize() {
-      const board = boardRef.current;
-      const boardRect = board?.getBoundingClientRect();
+    selectedPinRef.current = selectedPin;
+  }, [selectedPin]);
 
-      setPatchPositions((positions) => {
-        const nextPositions: Partial<Record<PatchId, PatchPosition>> = {};
+  useEffect(() => {
+    if (!selectedPin) return;
 
-        Object.entries(positions).forEach(([id, position]) => {
-          if (!position) return;
-          const size = patchSizes.current[id as PatchId];
+    const timeoutId = setTimeout(() => {
+      setNoteTextReady(true);
+    }, NOTE_TEXT_DELAY_MS);
 
-          nextPositions[id as PatchId] = {
-            x: clamp(position.x, 0, (boardRect?.width || window.innerWidth) - (size?.width || 0)),
-            y: clamp(position.y, 0, (boardRect?.height || window.innerHeight) - (size?.height || 0)),
-          };
-        });
+    return () => clearTimeout(timeoutId);
+  }, [selectedPin]);
 
-        return nextPositions;
+  useEffect(() => {
+    isFlippingRef.current = isFlipping;
+  }, [isFlipping]);
+
+  useEffect(() => {
+    setPatchPositions((positions) => {
+      const nextPositions: Partial<Record<PatchId, PatchPosition>> = {};
+      const selected = selectedPinRef.current;
+
+      Object.entries(positions).forEach(([id, position]) => {
+        if (!position) return;
+        const patchId = id as PatchId;
+        const size = patchSizes.current[patchId];
+
+        if (selected?.id === patchId && size) {
+          nextPositions[patchId] = getNotePinPositionForSize(boardSize.width, boardSize.height, size.width, size.height);
+          return;
+        }
+
+        nextPositions[patchId] = {
+          x: clamp(position.x, 0, boardSize.width - (size?.width || 0)),
+          y: clamp(position.y, 0, boardSize.height - (size?.height || 0)),
+        };
       });
-    }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+      return nextPositions;
+    });
+  }, [boardSize.height, boardSize.width]);
 
   useEffect(() => {
     function stopSwing() {
@@ -171,10 +175,15 @@ export default function Pinboard({ onClose }: PinboardProps) {
       const maxX = (boardRect?.width || window.innerWidth) - drag.width;
       const maxY = (boardRect?.height || window.innerHeight) - drag.height;
 
-      const now = performance.now();
+      const now = event.timeStamp;
       const elapsed = Math.max(1, now - drag.lastTime);
       const nextX = clamp(event.clientX - boardLeft - drag.x, 0, maxX);
       const nextY = clamp(event.clientY - boardTop - drag.y, 0, maxY);
+      const movedDistance = Math.hypot(event.clientX - drag.startClientX, event.clientY - drag.startClientY);
+
+      if (movedDistance > CLICK_MOVE_THRESHOLD) {
+        drag.hasMoved = true;
+      }
 
       drag.velocityX = ((event.clientX - drag.lastClientX) / elapsed) * 16.67;
       drag.velocityY = ((event.clientY - drag.lastClientY) / elapsed) * 16.67;
@@ -195,6 +204,17 @@ export default function Pinboard({ onClose }: PinboardProps) {
         ...swings,
         [drag.id]: clamp(drag.velocityX * SWING_FORCE, -MAX_SWING, MAX_SWING),
       }));
+
+      const openPin = selectedPinRef.current;
+      if (openPin?.id === drag.id && openPin.side === drag.side) {
+        const pinCenterX = nextX + drag.width / 2;
+        const pinCenterY = nextY + drag.height / 2;
+
+        if (drag.hasMoved && !isPointInsideNote(pinCenterX, pinCenterY)) {
+          setNoteTextReady(false);
+          setSelectedPin(null);
+        }
+      }
     }
 
     function handlePointerUp() {
@@ -202,7 +222,22 @@ export default function Pinboard({ onClose }: PinboardProps) {
 
       if (drag) {
         stopSwing();
-        settleSwing(drag.id, clamp(drag.velocityX * SWING_FORCE, -MAX_SWING, MAX_SWING));
+        const swing = clamp(drag.velocityX * SWING_FORCE, -MAX_SWING, MAX_SWING);
+        settleSwing(drag.id, swing);
+        lastInteractionMoved.current = drag.hasMoved;
+
+        if (drag.hasMoved) {
+          const pinCenterX = drag.currentX + drag.width / 2;
+          const pinCenterY = drag.currentY + drag.height / 2;
+
+          if (isPointInsideNote(pinCenterX, pinCenterY)) {
+            const previousPosition = selectedPinRef.current?.id === drag.id && selectedPinRef.current.side === drag.side
+              ? selectedPinRef.current.previousPosition
+              : drag.previousPosition;
+
+            attachPinToNote(drag.side, drag.id, previousPosition, drag.width, drag.height);
+          }
+        }
       }
 
       dragState.current = null;
@@ -222,9 +257,9 @@ export default function Pinboard({ onClose }: PinboardProps) {
         clearTimeout(flipTimeout.current);
       }
     };
-  }, []);
+  }, [attachPinToNote, isPointInsideNote]);
 
-  function startDragging(id: PatchId, event: ReactPointerEvent<HTMLDivElement>) {
+  function startDragging(side: BoardSide, id: PatchId, event: ReactPointerEvent<HTMLDivElement>) {
     if (isFlipping) return;
 
     const rect = event.currentTarget.getBoundingClientRect();
@@ -233,6 +268,7 @@ export default function Pinboard({ onClose }: PinboardProps) {
     const boardTop = boardRect?.top || 0;
 
     event.preventDefault();
+    lastInteractionMoved.current = false;
     if (swingFrame.current !== null) {
       cancelAnimationFrame(swingFrame.current);
       swingFrame.current = null;
@@ -241,20 +277,27 @@ export default function Pinboard({ onClose }: PinboardProps) {
       width: rect.width,
       height: rect.height,
     };
-
     dragState.current = {
       id,
+      side,
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
       width: rect.width,
       height: rect.height,
+      previousPosition: {
+        x: rect.left - boardLeft,
+        y: rect.top - boardTop,
+      },
       currentX: rect.left - boardLeft,
       currentY: rect.top - boardTop,
+      startClientX: event.clientX,
+      startClientY: event.clientY,
       lastClientX: event.clientX,
       lastClientY: event.clientY,
-      lastTime: performance.now(),
+      lastTime: event.timeStamp,
       velocityX: 0,
       velocityY: 0,
+      hasMoved: false,
     };
     setDraggingPatch(id);
     setPatchPositions((positions) => ({
@@ -270,17 +313,29 @@ export default function Pinboard({ onClose }: PinboardProps) {
     }));
   }
 
-  function getPatchStyle(id: PatchId, anchoredStyle: CSSProperties): CSSProperties {
-    const position = patchPositions[id];
+  function activatePinFromElement(side: BoardSide, id: PatchId, element: HTMLElement) {
+    if (isFlippingRef.current) return;
 
-    if (!position) {
-      return anchoredStyle;
+    if (lastInteractionMoved.current) {
+      lastInteractionMoved.current = false;
+      return;
     }
 
-    return {
-      left: position.x,
-      top: position.y,
+    const rect = element.getBoundingClientRect();
+    const boardRect = boardRef.current?.getBoundingClientRect();
+    const boardLeft = boardRect?.left || 0;
+    const boardTop = boardRect?.top || 0;
+    const previousPosition = {
+      x: rect.left - boardLeft,
+      y: rect.top - boardTop,
     };
+
+    if (selectedPinRef.current?.id === id && selectedPinRef.current.side === side) {
+      detachPinFromNote();
+      return;
+    }
+
+    attachPinToNote(side, id, previousPosition, rect.width, rect.height);
   }
 
   function flipBoard() {
@@ -288,6 +343,9 @@ export default function Pinboard({ onClose }: PinboardProps) {
 
     setIsFlipping(true);
     setDraggingPatch(null);
+    setNoteTextReady(false);
+    setSelectedPin(null);
+    lastInteractionMoved.current = false;
     dragState.current = null;
     setActiveSide((side) => (side === 'professional' ? 'hobby' : 'professional'));
 
@@ -300,24 +358,14 @@ export default function Pinboard({ onClose }: PinboardProps) {
     }, FLIP_DURATION_MS);
   }
 
-  function renderPins(side: BoardSide) {
-    return boardPins[side].map((pin) => (
-      <DecorativePatch
-        key={pin.id}
-        image={pin.image}
-        style={getPatchStyle(pin.id, pin.anchor)}
-        size={pin.size}
-        initialRotate={pin.initialRotate}
-        hoverRotate={pin.hoverRotate}
-        disableAnimation={false}
-        draggable={!isFlipping && activeSide === side}
-        isDragging={draggingPatch === pin.id}
-        swingRotation={patchSwings[pin.id] || 0}
-        boardShadow
-        onPointerDown={(event) => startDragging(pin.id, event)}
-      />
-    ));
+  function getSelectedPinConfig(side: BoardSide) {
+    if (!selectedPin || selectedPin.side !== side) return null;
+    return boardPins[side].find((pin) => pin.id === selectedPin.id) || null;
   }
+
+  const note = getNoteLayout();
+  const dockHeight = getDockHeight();
+  const contentTop = selectedPin ? dockHeight + NOTE_CONTENT_GAP : dockHeight;
 
   return (
     <section
@@ -332,113 +380,40 @@ export default function Pinboard({ onClose }: PinboardProps) {
         `,
       }}
     >
-      <header className="relative z-40 flex items-center justify-between gap-4" style={{ fontFamily: '"Inclusive Sans", sans-serif' }}>
-        <h2 className="text-sm sm:text-base font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--accent-amber)' }}>
-          {activeSide === 'professional' ? 'Professional + Academia' : 'Hobby + College'}
-        </h2>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={flipBoard}
-            className="px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-default disabled:opacity-70"
-            disabled={isFlipping}
-            style={{ backgroundColor: 'rgba(83, 47, 25, 0.78)', borderColor: 'rgba(255, 210, 120, 0.65)' }}
-          >
-            {isFlipping ? 'Flipping' : activeSide === 'professional' ? 'Flip to Hobby' : 'Flip to Career'}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] transition-all duration-300 hover:-translate-y-0.5"
-            style={{ backgroundColor: 'rgba(11, 15, 20, 0.55)', borderColor: 'rgba(255, 210, 120, 0.55)' }}
-          >
-            Bio
-          </button>
-        </div>
-      </header>
+      <PinboardHeader activeSide={activeSide} isFlipping={isFlipping} onFlip={flipBoard} onClose={onClose} />
+      <PinboardScene activeSide={activeSide} boardRef={boardRef}>
+        {(['professional', 'hobby'] as BoardSide[]).map((side) => {
+          const selectedPinConfig = getSelectedPinConfig(side);
+          const isFilled = Boolean(selectedPin && selectedPin.side === side && selectedPinConfig);
 
-      <div className="absolute inset-5 top-16 sm:inset-10 sm:top-20" style={{ perspective: '1600px' }}>
-        <div
-          ref={boardRef}
-          className="relative h-full w-full transition-transform duration-[900ms] ease-out"
-          style={{
-            transformStyle: 'preserve-3d',
-            transform: activeSide === 'hobby' ? 'rotateY(180deg)' : 'rotateY(0deg)',
-          }}
-        >
-          <div
-            className="absolute inset-0 overflow-hidden"
-            style={{
-              borderRadius: 8,
-              backfaceVisibility: 'hidden',
-              backgroundColor: '#8a5432',
-              backgroundImage: `
-                repeating-linear-gradient(8deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 13px),
-                repeating-linear-gradient(97deg, rgba(55,24,10,0.12) 0 1px, transparent 1px 17px),
-                linear-gradient(72deg, rgba(255, 232, 184, 0.08), transparent 28%, rgba(45, 20, 8, 0.16) 64%, transparent 100%),
-                linear-gradient(115deg, rgba(255, 229, 166, 0.14), transparent 34%),
-                linear-gradient(135deg, #9b623a 0%, #70401f 46%, #5c331c 100%)
-              `,
-              boxShadow: '0 28px 70px rgba(0, 0, 0, 0.55), inset 0 0 70px rgba(45, 22, 10, 0.58), inset 0 2px 0 rgba(255, 240, 190, 0.18)',
-              pointerEvents: activeSide === 'professional' && !isFlipping ? 'auto' : 'none',
-            }}
-          >
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                border: 'clamp(12px, 2vw, 24px) solid #3a2114',
-                boxShadow: 'inset 0 0 0 1px rgba(255, 214, 143, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.42)',
-              }}
-            />
-            <div
-              className="pointer-events-none absolute inset-[clamp(12px,2vw,24px)]"
-              style={{
-                boxShadow: 'inset 8px 10px 28px rgba(0, 0, 0, 0.18), inset -5px -4px 20px rgba(255, 228, 168, 0.08)',
-              }}
-            />
-            <div className="pointer-events-none absolute left-8 top-8 z-10 text-xs font-bold uppercase tracking-[0.16em] sm:left-12 sm:top-10" style={{ color: 'rgba(255, 236, 188, 0.68)', fontFamily: '"Inclusive Sans", sans-serif' }}>
-              Professional + Academia
-            </div>
-            {renderPins('professional')}
-          </div>
-
-          <div
-            className="absolute inset-0 overflow-hidden"
-            style={{
-              borderRadius: 8,
-              backfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)',
-              backgroundColor: '#84503a',
-              backgroundImage: `
-                repeating-linear-gradient(-10deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 12px),
-                repeating-linear-gradient(78deg, rgba(52,21,12,0.13) 0 1px, transparent 1px 16px),
-                linear-gradient(70deg, rgba(255, 208, 144, 0.1), transparent 32%, rgba(36, 15, 10, 0.16) 68%, transparent 100%),
-                linear-gradient(135deg, #9a644a 0%, #71432e 46%, #552d1f 100%)
-              `,
-              boxShadow: '0 28px 70px rgba(0, 0, 0, 0.55), inset 0 0 70px rgba(42, 18, 12, 0.56), inset 0 2px 0 rgba(255, 226, 188, 0.14)',
-              pointerEvents: activeSide === 'hobby' && !isFlipping ? 'auto' : 'none',
-            }}
-          >
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                border: 'clamp(12px, 2vw, 24px) solid #321b16',
-                boxShadow: 'inset 0 0 0 1px rgba(255, 206, 168, 0.18), inset 0 0 30px rgba(0, 0, 0, 0.42)',
-              }}
-            />
-            <div
-              className="pointer-events-none absolute inset-[clamp(12px,2vw,24px)]"
-              style={{
-                boxShadow: 'inset 7px 10px 30px rgba(0, 0, 0, 0.2), inset -6px -5px 22px rgba(255, 216, 180, 0.08)',
-              }}
-            />
-            <div className="pointer-events-none absolute left-8 top-8 z-10 text-xs font-bold uppercase tracking-[0.16em] sm:left-12 sm:top-10" style={{ color: 'rgba(255, 228, 203, 0.7)', fontFamily: '"Inclusive Sans", sans-serif' }}>
-              Hobby + College
-            </div>
-            {renderPins('hobby')}
-          </div>
-        </div>
-      </div>
+          return (
+            <BoardFace key={side} side={side} activeSide={activeSide} isFlipping={isFlipping}>
+              <PinLayer
+                side={side}
+                activeSide={activeSide}
+                isFlipping={isFlipping}
+                pins={boardPins[side]}
+                selectedPin={selectedPin}
+                draggingPatch={draggingPatch}
+                patchPositions={patchPositions}
+                patchSwings={patchSwings}
+                onPointerDown={startDragging}
+                onActivate={activatePinFromElement}
+              />
+              <PinNote
+                side={side}
+                activeSide={activeSide}
+                note={note}
+                pin={selectedPinConfig}
+                isFilled={isFilled}
+                noteTextReady={noteTextReady}
+                dockHeight={dockHeight}
+                contentTop={contentTop}
+              />
+            </BoardFace>
+          );
+        })}
+      </PinboardScene>
     </section>
   );
 }
