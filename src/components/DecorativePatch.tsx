@@ -13,6 +13,11 @@ type Props = {
   size?: Size;
   mousePosition?: { x: number; y: number } | null;
   trackMouse?: boolean;
+  draggable?: boolean;
+  isDragging?: boolean;
+  swingRotation?: number;
+  boardShadow?: boolean;
+  onPointerDown?: React.PointerEventHandler<HTMLDivElement>;
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -32,6 +37,11 @@ export default function DecorativePatch({
   size = 'md',
   mousePosition = null,
   trackMouse = false,
+  draggable = false,
+  isDragging = false,
+  swingRotation = 0,
+  boardShadow = false,
+  onPointerDown,
 }: Props) {
   const [hovering, setHovering] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -55,6 +65,12 @@ export default function DecorativePatch({
       window.removeEventListener('scroll', updateRect);
     };
   }, []);
+
+  useEffect(() => {
+    if (imgRef.current) {
+      cachedRect.current = imgRef.current.getBoundingClientRect();
+    }
+  }, [style]);
 
   // Update transforms directly via CSS custom properties (GPU-friendly)
   useEffect(() => {
@@ -118,16 +134,23 @@ export default function DecorativePatch({
   }, [mousePosition, trackMouse, disableAnimation]);
 
   const shouldAnimate = !disableAnimation && hovering;
-  const baseRotate = shouldAnimate ? hoverRotate : initialRotate;
+  const baseRotate = (shouldAnimate ? hoverRotate : initialRotate) + swingRotation;
+  const shadowOffsetX = Math.round(swingRotation * 0.28);
+  const imageTransform = trackMouse && !disableAnimation
+    ? `perspective(500px) rotateX(calc(var(--tilt-x) * 1deg)) rotateY(calc(var(--tilt-y) * 1deg)) rotate(${baseRotate}deg) scale(${isDragging ? 1.035 : 1})`
+    : `rotate(${baseRotate}deg) scale(${isDragging ? 1.035 : 1})`;
 
   return (
     <div
       ref={containerRef}
       className={`${sizeClasses[size]} ${className || ''}`}
+      onPointerDown={onPointerDown}
       style={{
         position: 'absolute',
         height: 'auto',
-        zIndex: 20,
+        cursor: draggable ? (isDragging ? 'grabbing' : 'grab') : undefined,
+        touchAction: draggable ? 'none' : undefined,
+        userSelect: draggable ? 'none' : undefined,
         // Initialize CSS custom properties
         '--tilt-x': '0',
         '--tilt-y': '0',
@@ -135,6 +158,7 @@ export default function DecorativePatch({
         '--shine-y': '50%',
         '--shine-opacity': '0',
         ...style,
+        zIndex: isDragging ? 45 : style?.zIndex || 20,
       } as React.CSSProperties}
     >
       <img
@@ -146,13 +170,15 @@ export default function DecorativePatch({
         onMouseLeave={() => setHovering(false)}
         className="w-full h-auto"
         style={{
-          transition: disableAnimation ? 'none' : 'transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-          transform: trackMouse && !disableAnimation
-            ? `perspective(500px) rotateX(calc(var(--tilt-x) * 1deg)) rotateY(calc(var(--tilt-y) * 1deg)) rotate(${baseRotate}deg)`
-            : `rotate(${baseRotate}deg)`,
-          pointerEvents: disableAnimation ? 'none' : 'auto',
+          transition: disableAnimation ? 'none' : 'transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), filter 180ms ease',
+          transform: imageTransform,
+          filter: boardShadow
+            ? `drop-shadow(${shadowOffsetX}px ${isDragging ? 22 : 12}px ${isDragging ? 20 : 10}px rgba(0, 0, 0, ${isDragging ? 0.5 : 0.32}))`
+            : undefined,
+          pointerEvents: draggable || !disableAnimation ? 'auto' : 'none',
           transformStyle: 'preserve-3d',
-          willChange: trackMouse ? 'transform' : 'auto',
+          transformOrigin: '50% 12%',
+          willChange: trackMouse || draggable ? 'transform, filter' : 'auto',
         }}
       />
       {/* Sunlight reflection overlay - masked to image shape */}
@@ -165,6 +191,7 @@ export default function DecorativePatch({
             transition: 'background 200ms ease-out',
             mixBlendMode: 'overlay',
             transform: `perspective(500px) rotateX(calc(var(--tilt-x) * 1deg)) rotateY(calc(var(--tilt-y) * 1deg)) rotate(${baseRotate}deg)`,
+            transformOrigin: '50% 12%',
             WebkitMaskImage: `url(${image})`,
             maskImage: `url(${image})`,
             WebkitMaskSize: 'contain',
