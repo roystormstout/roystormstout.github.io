@@ -23,9 +23,9 @@ type Props = {
 };
 
 const sizeWidths: Record<Size, string> = {
-  sm: 'clamp(5rem, min(16vw, 20vh), 14rem)',
-  md: 'clamp(6rem, min(22vw, 27vh), 18rem)',
-  lg: 'clamp(7rem, min(26vw, 31vh), 20rem)',
+  sm: 'clamp(5.5rem, 14vw, 11rem)',
+  md: 'clamp(6.5rem, 16vw, 12.5rem)',
+  lg: 'clamp(7.5rem, 18vw, 14rem)',
 };
 
 export default function DecorativePatch({

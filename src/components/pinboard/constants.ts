@@ -6,7 +6,6 @@ export const BOARD_SWITCH_DURATION_MS = 900;
 export const CLICK_MOVE_THRESHOLD = 6;
 export const NOTE_WIDTH = 760;
 export const NOTE_HEIGHT = 760;
-export const NOTE_DOCK_HEIGHT = 150;
 export const MIN_NOTE_DOCK_HEIGHT = 96;
 export const MAX_NOTE_DOCK_HEIGHT = 172;
 export const NOTE_DOCK_HEIGHT_RATIO = 0.21;

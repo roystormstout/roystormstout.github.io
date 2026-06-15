@@ -6,7 +6,7 @@ export function clamp(value: number, min: number, max: number) {
 }
 
 export function getNoteLayoutForSize(boardWidth: number, boardHeight: number): NoteLayout {
-  const sideReserve = boardWidth >= 1000 ? 420 : boardWidth >= 760 ? 340 : boardWidth >= 620 ? 220 : 160;
+  const sideReserve = boardWidth >= 1000 ? 540 : boardWidth >= 760 ? 460 : boardWidth >= 620 ? 360 : 200;
   const verticalReserve = boardHeight >= 700 ? 80 : boardHeight >= 540 ? 64 : 52;
   const width = Math.min(NOTE_WIDTH, Math.max(360, boardWidth - sideReserve));
   const height = Math.min(NOTE_HEIGHT, Math.max(320, boardHeight - verticalReserve));
@@ -25,6 +25,6 @@ export function getNotePinPositionForSize(boardWidth: number, boardHeight: numbe
 
   return {
     x: clamp(note.x + 24, 0, boardWidth - width),
-    y: clamp(note.y + dockHeight - height, 0, boardHeight - height),
+    y: clamp(note.y + dockHeight * 0.8 - height, 0, boardHeight - height),
   };
 }
