@@ -88,6 +88,7 @@ export default function DecorativePatch({
         alt={alt}
         aria-hidden
         draggable={false}
+        decoding="async"
         className="w-full h-auto"
         style={{
           transition: 'transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), filter 180ms ease',

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { boardPins } from './pinboard/data';
-import { boardLabels, boardSides, type BoardSide, type PinConfig } from './pinboard/types';
+import './pinboard/Pinboard.css';
+import { boardPins, type PinConfig } from './pinboard/data';
+import { boardLabels, boardSides, type BoardSide } from './pinboard/types';
 
 type PinboardMobileProps = {
   onClose: () => void;
@@ -20,7 +21,7 @@ function recencyKey(year: string): number {
   return Math.max(...matches.map(Number));
 }
 
-function sortNewestFirst(pins: PinConfig[]): PinConfig[] {
+function sortNewestFirst(pins: readonly PinConfig[]): PinConfig[] {
   return [...pins].sort((a, b) => recencyKey(b.year) - recencyKey(a.year));
 }
 
@@ -28,7 +29,7 @@ function PinCard({ pin }: { pin: PinConfig }) {
   return (
     <article className="pin-card">
       <div className="pin-card-badge">
-        <img src={pin.image} alt="" aria-hidden draggable={false} />
+        <img src={pin.image} alt="" aria-hidden draggable={false} loading="lazy" decoding="async" />
       </div>
       <div className="pin-card-note">
         <p className="pin-card-eyebrow">

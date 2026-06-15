@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
+import usePrefersReducedMotion from './pinboard/hooks/usePrefersReducedMotion';
 
 const MOBILE_BREAKPOINT = 768;
 
 type BioProps = {
   onOpenPinboard: () => void;
+  onPreloadPinboard: () => void;
 };
 
-export default function Bio({ onOpenPinboard }: BioProps) {
+export default function Bio({ onOpenPinboard, onPreloadPinboard }: BioProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const lastMouse = useRef<{ x: number; y: number } | null>(null);
   const rafId = useRef<number | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= MOBILE_BREAKPOINT);
+  const reduceMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     function handleResize() {
@@ -22,7 +25,7 @@ export default function Bio({ onOpenPinboard }: BioProps) {
   }, []);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isMobile || reduceMotion) return;
 
     const el = contentRef.current;
     function applyShadow(clientX: number, clientY: number) {
@@ -72,7 +75,7 @@ export default function Bio({ onOpenPinboard }: BioProps) {
         (node as HTMLElement).style.textShadow = '';
       });
     };
-  }, [isMobile]);
+  }, [isMobile, reduceMotion]);
 
   return (
     <section
@@ -118,6 +121,9 @@ export default function Bio({ onOpenPinboard }: BioProps) {
       <button
         type="button"
         onClick={onOpenPinboard}
+        onFocus={onPreloadPinboard}
+        onPointerDown={onPreloadPinboard}
+        onPointerEnter={onPreloadPinboard}
         className="group absolute bottom-8 left-1/2 z-20 -translate-x-1/2 px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] transition-all duration-300 hover:-translate-y-1"
         style={{
           color: 'var(--text-primary)',

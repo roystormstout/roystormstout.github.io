@@ -7,6 +7,12 @@
   --pin-rotate: var(--pin-hover-rotate);
 }
 
+.decorative-patch:focus-visible {
+  outline: 3px solid rgba(94, 225, 255, 0.9) !important;
+  outline-offset: 0.35rem !important;
+  border-radius: 0.75rem !important;
+}
+
 /* Cap pin artwork height so tall logos stay proportionate to wide ones. */
 .decorative-patch img {
   width: auto;

@@ -1,73 +1,95 @@
-# React + TypeScript + Vite
+# Roy Guo Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive portfolio for [ultroy.com](https://ultroy.com/). The site opens on a typographic bio screen and expands into a corkboard-style project pinboard with work, research, and play sections.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- GitHub Pages deployment through `gh-pages`
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Install dependencies:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Start the local dev server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Build for production:
+
+```bash
+npm run build
+```
+
+Regenerate optimized pin artwork after replacing source PNGs:
+
+```bash
+npm run optimize:pins
+```
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+Deploy the built site to GitHub Pages:
+
+```bash
+npm run deploy
+```
+
+## Project Structure
+
+- `src/App.tsx` controls the bio/pinboard view switch and lazy-loads the pinboard experience.
+- `src/components/Bio.tsx` renders the landing bio screen.
+- `src/components/Pinboard.tsx` composes the desktop pinboard from smaller board, pin, note, and hook modules.
+- `src/components/PinboardMobile.tsx` renders the mobile card-stack version of the pinboard.
+- `src/components/pinboard/data.ts` is the source of truth for board content and pin IDs.
+- `src/components/pinboard/hooks/` contains board switching, selected pin state, drag behavior, note docking, size, mobile, and reduced-motion hooks.
+- `src/assets/pins/` stores the pin artwork used by the board.
+- `public/CNAME` sets the custom GitHub Pages domain.
+
+## Editing Pinboard Content
+
+Project content lives in `src/components/pinboard/data.ts`. Add pins inside one of the board arrays: `work`, `research`, or `play`.
+
+Pin IDs are derived from `boardPins`, so `PatchId` updates automatically when content changes. Keep each `id` unique across the board data because drag positions, note state, and selected pins are keyed by that ID.
+
+Each pin supports:
+
+- `id`, `image`, `size`, `initialRotate`, `hoverRotate`, and `anchor` for visual placement.
+- `title`, `year`, `subtitle`, `description`, and `bullets` for note/card content.
+- Optional `link` and `linkLabel` for external project links.
+
+## Accessibility Notes
+
+- Hidden app views are marked inert so keyboard focus stays in the active view.
+- Interactive pins render as labeled buttons and have visible focus styling.
+- Motion-heavy interactions respect `prefers-reduced-motion` in CSS and in the pinboard animation hooks.
+- The mobile pinboard uses a readable stacked-card layout instead of the desktop drag board.
+
+## Performance Notes
+
+- The pinboard views are lazy-loaded from `App.tsx`, then the active viewport variant is preloaded during idle time and on Pinboard button intent.
+- Hidden board faces do not mount their pin images until they become active or participate in a board flip.
+- Pin images use optimized WebP assets, async decoding, and mobile card images lazy-load.
+- `npm run optimize:pins` converts source PNG artwork in `src/assets/pins/` to display-sized WebP files in `src/assets/pins/optimized/`.
+
+## Quality Checks
+
+Run these before deploying:
+
+```bash
+npm run lint
+npm run build
 ```

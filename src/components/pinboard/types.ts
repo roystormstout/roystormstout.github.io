@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react';
 
-export type PatchId = 'paper' | 'azure' | 'xbox' | 'mahjong' | 'killstreak' | 'ironman' | 'happyEnding';
 export const boardSides = ['work', 'research', 'play'] as const;
 export type BoardSide = (typeof boardSides)[number];
 export type BoardSwitchDirection = -1 | 1;
@@ -16,8 +15,17 @@ export type PatchPosition = {
   y: number;
 };
 
-export type DragState = PatchPosition & {
-  id: PatchId;
+export type PatchSize = {
+  width: number;
+  height: number;
+};
+
+export type PatchSizes<Id extends string = string> = Partial<Record<Id, PatchSize>>;
+export type PatchPositions<Id extends string = string> = Partial<Record<Id, PatchPosition>>;
+export type PatchSwings<Id extends string = string> = Partial<Record<Id, number>>;
+
+export type DragState<Id extends string = string> = PatchPosition & {
+  id: Id;
   side: BoardSide;
   width: number;
   height: number;
@@ -38,8 +46,8 @@ export type PinboardProps = {
   onClose: () => void;
 };
 
-export type PinConfig = {
-  id: PatchId;
+export type PinConfigBase<Id extends string = string> = {
+  id: Id;
   image: string;
   size: 'sm' | 'md' | 'lg';
   initialRotate: number;
@@ -49,14 +57,14 @@ export type PinConfig = {
   year: string;
   subtitle: string;
   description: string;
-  bullets: string[];
+  bullets: readonly string[];
   link?: string;
   linkLabel?: string;
 };
 
-export type SelectedPin = {
+export type SelectedPin<Id extends string = string> = {
   side: BoardSide;
-  id: PatchId;
+  id: Id;
   previousPosition: PatchPosition;
 };
 

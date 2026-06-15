@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
-import type { BoardSide, NoteLayout, PinConfig } from './types';
+import type { PinConfig } from './data';
+import type { BoardSide, NoteLayout } from './types';
 
 type PinNoteProps = {
   side: BoardSide;

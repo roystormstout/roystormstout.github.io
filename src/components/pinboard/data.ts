@@ -1,13 +1,13 @@
-import XboxPin from '../../assets/pins/xbox-pin.png';
-import AzurePin from '../../assets/pins/azure-pin.png';
-import MahjongAiPin from '../../assets/pins/mahjong-ai-pin.png';
-import FilmResearchPin from '../../assets/pins/film-research-pin.png';
-import MagePin from '../../assets/pins/mage-pin.png';
-import RcCarPin from '../../assets/pins/rc-car-pin.png';
-import HappyEndingPin from '../../assets/pins/happy-ending-pin.png';
-import type { BoardSide, PinConfig } from './types';
+import XboxPin from '../../assets/pins/optimized/xbox-pin.webp';
+import AzurePin from '../../assets/pins/optimized/azure-pin.webp';
+import MahjongAiPin from '../../assets/pins/optimized/mahjong-ai-pin.webp';
+import FilmResearchPin from '../../assets/pins/optimized/film-research-pin.webp';
+import MagePin from '../../assets/pins/optimized/mage-pin.webp';
+import RcCarPin from '../../assets/pins/optimized/rc-car-pin.webp';
+import HappyEndingPin from '../../assets/pins/optimized/happy-ending-pin.webp';
+import type { BoardSide, PinConfigBase } from './types';
 
-export const boardPins: Record<BoardSide, PinConfig[]> = {
+export const boardPins = {
   work: [
     {
       id: 'azure',
@@ -115,4 +115,13 @@ export const boardPins: Record<BoardSide, PinConfig[]> = {
       linkLabel: 'View code',
     },
   ],
-};
+} as const satisfies Record<BoardSide, readonly PinConfigBase[]>;
+
+export type PatchId = (typeof boardPins)[BoardSide][number]['id'];
+export type PinConfig = PinConfigBase<PatchId>;
+
+export function getPinConfig(side: BoardSide, id: PatchId): PinConfig | null {
+  const pins: readonly PinConfig[] = boardPins[side];
+
+  return pins.find((pin) => pin.id === id) || null;
+}

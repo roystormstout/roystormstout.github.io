@@ -1,21 +1,22 @@
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 import DecorativePatch from '../DecorativePatch';
-import type { BoardSide, PatchId, PatchPosition, PinConfig, SelectedPin } from './types';
+import type { PatchId, PinConfig } from './data';
+import type { BoardSide, PatchPositions, PatchSwings, SelectedPin } from './types';
 
 type PinLayerProps = {
   side: BoardSide;
   activeSide: BoardSide;
   isSwitching: boolean;
-  pins: PinConfig[];
-  selectedPin: SelectedPin | null;
+  pins: readonly PinConfig[];
+  selectedPin: SelectedPin<PatchId> | null;
   draggingPatch: PatchId | null;
-  patchPositions: Partial<Record<PatchId, PatchPosition>>;
-  patchSwings: Partial<Record<PatchId, number>>;
+  patchPositions: PatchPositions<PatchId>;
+  patchSwings: PatchSwings<PatchId>;
   onPointerDown: (side: BoardSide, id: PatchId, event: ReactPointerEvent<HTMLElement>) => void;
   onActivate: (side: BoardSide, id: PatchId, element: HTMLElement) => void;
 };
 
-function getPatchStyle(id: PatchId, anchoredStyle: CSSProperties, patchPositions: Partial<Record<PatchId, PatchPosition>>): CSSProperties {
+function getPatchStyle(id: PatchId, anchoredStyle: CSSProperties, patchPositions: PatchPositions<PatchId>): CSSProperties {
   const position = patchPositions[id];
 
   if (!position) {
