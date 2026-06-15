@@ -1,10 +1,14 @@
 import type { ReactNode } from 'react';
 import { boardLabels, type BoardSide } from './types';
+import type { BoardTransition } from './types';
 
 type BoardFaceProps = {
   side: BoardSide;
   activeSide: BoardSide;
   isSwitching: boolean;
+  transition: BoardTransition | null;
+  nextSide: BoardSide;
+  onFlipBoard: () => void;
   children: ReactNode;
 };
 
@@ -15,7 +19,6 @@ const faceStyles: Record<BoardSide, {
   frameColor: string;
   frameHighlight: string;
   innerShadow: string;
-  labelColor: string;
 }> = {
   work: {
     backgroundColor: '#8a5432',
@@ -30,7 +33,6 @@ const faceStyles: Record<BoardSide, {
     frameColor: '#3a2114',
     frameHighlight: 'rgba(255, 214, 143, 0.2)',
     innerShadow: 'inset 8px 10px 28px rgba(0, 0, 0, 0.18), inset -5px -4px 20px rgba(255, 228, 168, 0.08)',
-    labelColor: 'rgba(255, 236, 188, 0.68)',
   },
   research: {
     backgroundColor: '#80553a',
@@ -44,7 +46,6 @@ const faceStyles: Record<BoardSide, {
     frameColor: '#342618',
     frameHighlight: 'rgba(244, 222, 169, 0.19)',
     innerShadow: 'inset 8px 10px 30px rgba(0, 0, 0, 0.2), inset -6px -5px 22px rgba(243, 226, 184, 0.07)',
-    labelColor: 'rgba(255, 234, 190, 0.7)',
   },
   play: {
     backgroundColor: '#84503a',
@@ -58,13 +59,23 @@ const faceStyles: Record<BoardSide, {
     frameColor: '#321b16',
     frameHighlight: 'rgba(255, 206, 168, 0.18)',
     innerShadow: 'inset 7px 10px 30px rgba(0, 0, 0, 0.2), inset -6px -5px 22px rgba(255, 216, 180, 0.08)',
-    labelColor: 'rgba(255, 228, 203, 0.7)',
   },
 };
 
-export default function BoardFace({ side, activeSide, isSwitching, children }: BoardFaceProps) {
+const titleNoteRotations: Record<BoardSide, string> = {
+  work: '-2.5deg',
+  research: '1.5deg',
+  play: '-1.25deg',
+};
+
+export default function BoardFace({ side, activeSide, isSwitching, transition, nextSide, onFlipBoard, children }: BoardFaceProps) {
   const isActive = activeSide === side;
+  const isTransitionOutgoing = isSwitching && transition?.fromSide === side;
+  const isTransitionIncoming = isSwitching && transition?.toSide === side;
   const faceStyle = faceStyles[side];
+  const transitionDirection = transition?.direction || 1;
+  const isVisible = isActive || isTransitionOutgoing || isTransitionIncoming;
+  const faceTransform = isTransitionIncoming ? `rotateY(${transitionDirection * 180}deg)` : 'rotateY(0deg)';
 
   return (
     <div
@@ -72,16 +83,27 @@ export default function BoardFace({ side, activeSide, isSwitching, children }: B
       aria-hidden={!isActive}
       style={{
         borderRadius: 8,
-        opacity: isActive ? 1 : 0,
-        transform: isActive ? 'translateY(0) scale(1)' : 'translateY(10px) scale(0.985)',
-        transition: 'opacity 280ms ease, transform 280ms ease',
-        zIndex: isActive ? 2 : 1,
+        opacity: isVisible ? 1 : 0,
+        transform: faceTransform,
+        zIndex: isTransitionOutgoing ? 3 : isTransitionIncoming ? 2 : isActive ? 3 : 1,
         backgroundColor: faceStyle.backgroundColor,
         backgroundImage: faceStyle.backgroundImage,
         boxShadow: faceStyle.boxShadow,
         pointerEvents: isActive && !isSwitching ? 'auto' : 'none',
+        transformOrigin: 'center center',
+        backfaceVisibility: 'hidden',
       }}
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-[60] transition-opacity duration-300"
+        style={{
+          opacity: isTransitionOutgoing ? 0.16 : 0,
+          background: transitionDirection < 0
+            ? 'linear-gradient(90deg, rgba(0,0,0,0.35), transparent 38%)'
+            : 'linear-gradient(270deg, rgba(0,0,0,0.35), transparent 38%)',
+        }}
+      />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -95,12 +117,24 @@ export default function BoardFace({ side, activeSide, isSwitching, children }: B
           boxShadow: faceStyle.innerShadow,
         }}
       />
-      <div
-        className="pointer-events-none absolute left-8 top-8 z-10 text-xs font-bold uppercase tracking-[0.16em] sm:left-12 sm:top-10"
-        style={{ color: faceStyle.labelColor, fontFamily: '"Inclusive Sans", sans-serif' }}
+      <h2
+        className="board-title-note pointer-events-none absolute left-6 top-6 z-[35] sm:left-10 sm:top-9"
+        style={{ transform: `rotate(${titleNoteRotations[side]})` }}
       >
         {boardLabels[side]}
-      </div>
+      </h2>
+      {isActive && !isSwitching && (
+        <button
+          type="button"
+          className="board-flip-button absolute right-5 top-6 z-[38] sm:right-9 sm:top-9"
+          onClick={onFlipBoard}
+          disabled={isSwitching}
+          aria-label={`Flip to ${boardLabels[nextSide]}`}
+        >
+          <span>Next</span>
+          <strong>{boardLabels[nextSide]}</strong>
+        </button>
+      )}
       {children}
     </div>
   );

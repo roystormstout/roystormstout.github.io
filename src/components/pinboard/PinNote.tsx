@@ -3,7 +3,7 @@ import type { BoardSide, NoteLayout, PinConfig } from './types';
 
 type PinNoteProps = {
   side: BoardSide;
-  activeSide: BoardSide;
+  isVisible: boolean;
   note: NoteLayout;
   pin: PinConfig | null;
   isFilled: boolean;
@@ -18,8 +18,8 @@ const noteRotations: Record<BoardSide, string> = {
   play: '1deg',
 };
 
-export default function PinNote({ side, activeSide, note, pin, isFilled, noteTextReady, dockHeight, contentTop }: PinNoteProps) {
-  if (side !== activeSide) return null;
+export default function PinNote({ side, isVisible, note, pin, isFilled, noteTextReady, dockHeight, contentTop }: PinNoteProps) {
+  if (!isVisible) return null;
 
   return (
     <article

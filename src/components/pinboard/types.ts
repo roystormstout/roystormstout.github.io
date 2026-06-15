@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 export type PatchId = 'paper' | 'azure' | 'xbox' | 'mahjong' | 'killstreak' | 'ironman' | 'happyEnding';
 export const boardSides = ['work', 'research', 'play'] as const;
 export type BoardSide = (typeof boardSides)[number];
+export type BoardSwitchDirection = -1 | 1;
 
 export const boardLabels: Record<BoardSide, string> = {
   work: 'Work',
@@ -63,4 +64,10 @@ export type SelectedPin = {
 export type NoteLayout = PatchPosition & {
   width: number;
   height: number;
+};
+
+export type BoardTransition = {
+  fromSide: BoardSide;
+  toSide: BoardSide;
+  direction: BoardSwitchDirection;
 };

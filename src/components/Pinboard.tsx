@@ -21,7 +21,17 @@ import {
   SWING_TENSION,
 } from './pinboard/constants';
 import { clamp, getNoteLayoutForSize, getNotePinPositionForSize } from './pinboard/layout';
-import { boardSides, type BoardSide, type DragState, type PatchId, type PatchPosition, type PinboardProps, type SelectedPin } from './pinboard/types';
+import {
+  boardSides,
+  type BoardSide,
+  type BoardSwitchDirection,
+  type BoardTransition,
+  type DragState,
+  type PatchId,
+  type PatchPosition,
+  type PinboardProps,
+  type SelectedPin,
+} from './pinboard/types';
 
 const emptySelectedPins: Record<BoardSide, SelectedPin | null> = {
   work: null,
@@ -35,18 +45,34 @@ const emptyNoteTextReady: Record<BoardSide, boolean> = {
   play: false,
 };
 
+function getBoardIndex(side: BoardSide) {
+  return boardSides.indexOf(side);
+}
+
+function getBoardDirection(fromSide: BoardSide, toSide: BoardSide): BoardSwitchDirection {
+  return getBoardIndex(toSide) > getBoardIndex(fromSide) ? 1 : -1;
+}
+
+function getNextBoard(side: BoardSide) {
+  return boardSides[(getBoardIndex(side) + 1) % boardSides.length];
+}
+
 export default function Pinboard({ onClose }: PinboardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState | null>(null);
   const swingFrame = useRef<number | null>(null);
   const patchSizes = useRef<Partial<Record<PatchId, { width: number; height: number }>>>({});
   const switchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resetTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedPinsRef = useRef<Record<BoardSide, SelectedPin | null>>(emptySelectedPins);
   const isSwitchingRef = useRef(false);
+  const activeSideRef = useRef<BoardSide>('work');
   const lastInteractionMoved = useRef(false);
   const [activeSide, setActiveSide] = useState<BoardSide>('work');
   const [draggingPatch, setDraggingPatch] = useState<PatchId | null>(null);
   const [isSwitching, setIsSwitching] = useState(false);
+  const [isFlipResetting, setIsFlipResetting] = useState(false);
+  const [boardTransition, setBoardTransition] = useState<BoardTransition | null>(null);
   const [selectedPins, setSelectedPins] = useState<Record<BoardSide, SelectedPin | null>>(emptySelectedPins);
   const [noteTextReady, setNoteTextReady] = useState<Record<BoardSide, boolean>>(emptyNoteTextReady);
   const boardSize = useBoardSize(boardRef);
@@ -123,6 +149,43 @@ export default function Pinboard({ onClose }: PinboardProps) {
   useEffect(() => {
     isSwitchingRef.current = isSwitching;
   }, [isSwitching]);
+
+  useEffect(() => {
+    activeSideRef.current = activeSide;
+  }, [activeSide]);
+
+  const switchBoard = useCallback((nextSide: BoardSide, directionOverride?: BoardSwitchDirection) => {
+    const fromSide = activeSideRef.current;
+    if (isSwitchingRef.current || fromSide === nextSide) return;
+
+    const direction = directionOverride || getBoardDirection(fromSide, nextSide);
+
+    setIsSwitching(true);
+    setBoardTransition({ fromSide, toSide: nextSide, direction });
+    setDraggingPatch(null);
+    lastInteractionMoved.current = false;
+    dragState.current = null;
+    setActiveSide(nextSide);
+
+    if (switchTimeout.current) {
+      clearTimeout(switchTimeout.current);
+    }
+
+    if (resetTimeout.current) {
+      clearTimeout(resetTimeout.current);
+    }
+
+    switchTimeout.current = setTimeout(() => {
+      setIsFlipResetting(true);
+      setActiveSide(nextSide);
+      setIsSwitching(false);
+      setBoardTransition(null);
+
+      resetTimeout.current = setTimeout(() => {
+        setIsFlipResetting(false);
+      }, 32);
+    }, BOARD_SWITCH_DURATION_MS);
+  }, []);
 
   useEffect(() => {
     setPatchPositions((positions) => {
@@ -277,6 +340,9 @@ export default function Pinboard({ onClose }: PinboardProps) {
       if (switchTimeout.current) {
         clearTimeout(switchTimeout.current);
       }
+      if (resetTimeout.current) {
+        clearTimeout(resetTimeout.current);
+      }
     };
   }, [attachPinToNote, isPointInsideNote]);
 
@@ -358,24 +424,6 @@ export default function Pinboard({ onClose }: PinboardProps) {
     attachPinToNote(side, id, previousPosition, rect.width, rect.height);
   }
 
-  function switchBoard(nextSide: BoardSide) {
-    if (isSwitching || activeSide === nextSide) return;
-
-    setIsSwitching(true);
-    setDraggingPatch(null);
-    lastInteractionMoved.current = false;
-    dragState.current = null;
-    setActiveSide(nextSide);
-
-    if (switchTimeout.current) {
-      clearTimeout(switchTimeout.current);
-    }
-
-    switchTimeout.current = setTimeout(() => {
-      setIsSwitching(false);
-    }, BOARD_SWITCH_DURATION_MS);
-  }
-
   function getSelectedPinConfig(side: BoardSide) {
     const selectedPin = selectedPins[side];
     if (!selectedPin) return null;
@@ -384,6 +432,7 @@ export default function Pinboard({ onClose }: PinboardProps) {
 
   const note = getNoteLayout();
   const dockHeight = getDockHeight();
+  const nextSide = getNextBoard(activeSide);
 
   return (
     <section
@@ -399,15 +448,30 @@ export default function Pinboard({ onClose }: PinboardProps) {
       }}
     >
       <PinboardHeader activeSide={activeSide} isSwitching={isSwitching} onSelectBoard={switchBoard} onClose={onClose} />
-      <PinboardScene activeSide={activeSide} boardRef={boardRef}>
+      <PinboardScene
+        activeSide={activeSide}
+        isSwitching={isSwitching}
+        isResetting={isFlipResetting}
+        transition={boardTransition}
+        boardRef={boardRef}
+      >
         {boardSides.map((side) => {
           const selectedPinConfig = getSelectedPinConfig(side);
           const selectedPin = selectedPins[side];
           const isFilled = Boolean(selectedPin && selectedPinConfig);
           const contentTop = isFilled ? dockHeight + NOTE_CONTENT_GAP : dockHeight;
+          const isFaceVisible = side === activeSide || side === boardTransition?.fromSide || side === boardTransition?.toSide;
 
           return (
-            <BoardFace key={side} side={side} activeSide={activeSide} isSwitching={isSwitching}>
+            <BoardFace
+              key={side}
+              side={side}
+              activeSide={activeSide}
+              isSwitching={isSwitching}
+              transition={boardTransition}
+              nextSide={nextSide}
+              onFlipBoard={() => switchBoard(nextSide, 1)}
+            >
               <PinLayer
                 side={side}
                 activeSide={activeSide}
@@ -422,7 +486,7 @@ export default function Pinboard({ onClose }: PinboardProps) {
               />
               <PinNote
                 side={side}
-                activeSide={activeSide}
+                isVisible={isFaceVisible}
                 note={note}
                 pin={selectedPinConfig}
                 isFilled={isFilled}

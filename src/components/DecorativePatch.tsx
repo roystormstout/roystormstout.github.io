@@ -63,7 +63,7 @@ export default function DecorativePatch({
     userSelect: draggable ? 'none' : undefined,
     '--pin-rest-rotate': `${restRotate}deg`,
     '--pin-hover-rotate': `${activeHoverRotate}deg`,
-    '--pin-scale': isDragging ? '1.035' : '1',
+    '--pin-scale': isDragging ? '1.045' : '1',
     ...style,
     zIndex: isDragging ? 45 : style?.zIndex || 20,
     ...(isInteractive

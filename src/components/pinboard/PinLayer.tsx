@@ -44,28 +44,32 @@ export default function PinLayer({
 
   return (
     <>
-      {pins.map((pin) => (
-        <DecorativePatch
-          key={pin.id}
-          image={pin.image}
-          style={{
-            ...getPatchStyle(pin.id, pin.anchor, patchPositions),
-            zIndex: selectedPin?.id === pin.id && selectedPin.side === side ? 42 : 36,
-          }}
-          size={pin.size}
-          initialRotate={pin.initialRotate}
-          hoverRotate={pin.hoverRotate}
-          draggable={isActivePinSide}
-          isDragging={draggingPatch === pin.id}
-          swingRotation={patchSwings[pin.id] || 0}
-          boardShadow
-          role={isActivePinSide ? 'button' : undefined}
-          tabIndex={isActivePinSide ? 0 : -1}
-          ariaLabel={isActivePinSide ? `Open details for ${pin.title}` : undefined}
-          onPointerDown={isActivePinSide ? (event) => onPointerDown(side, pin.id, event) : undefined}
-          onClick={isActivePinSide ? (event) => onActivate(side, pin.id, event.currentTarget) : undefined}
-        />
-      ))}
+      {pins.map((pin) => {
+        const isSelected = selectedPin?.id === pin.id && selectedPin.side === side;
+
+        return (
+          <DecorativePatch
+            key={pin.id}
+            image={pin.image}
+            style={{
+              ...getPatchStyle(pin.id, pin.anchor, patchPositions),
+              zIndex: isSelected ? 42 : 36,
+            }}
+            size={pin.size}
+            initialRotate={pin.initialRotate}
+            hoverRotate={pin.hoverRotate}
+            draggable={isActivePinSide}
+            isDragging={draggingPatch === pin.id}
+            swingRotation={patchSwings[pin.id] || 0}
+            boardShadow
+            role={isActivePinSide ? 'button' : undefined}
+            tabIndex={isActivePinSide ? 0 : -1}
+            ariaLabel={isActivePinSide ? `Open details for ${pin.title}` : undefined}
+            onPointerDown={isActivePinSide ? (event) => onPointerDown(side, pin.id, event) : undefined}
+            onClick={isActivePinSide ? (event) => onActivate(side, pin.id, event.currentTarget) : undefined}
+          />
+        );
+      })}
     </>
   );
 }
