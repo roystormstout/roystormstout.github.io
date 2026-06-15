@@ -1,4 +1,4 @@
-import{i as e,n as t,r as n,t as r}from"./index-BqLhXoxN.js";import{i,n as a,r as o,t as s}from"./data-CHE07DZh.js";var c=e(n(),1),l=r(),u={work:{backgroundColor:`#8a5432`,backgroundImage:`
+import{i as e,n as t,r as n,t as r}from"./index-R04pVXNs.js";import{i,n as a,r as o,t as s}from"./data-BzU945nY.js";var c=e(n(),1),l=r(),u={work:{backgroundColor:`#8a5432`,backgroundImage:`
       repeating-linear-gradient(8deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 13px),
       repeating-linear-gradient(97deg, rgba(55,24,10,0.12) 0 1px, transparent 1px 17px),
       linear-gradient(72deg, rgba(255, 232, 184, 0.08), transparent 28%, rgba(45, 20, 8, 0.16) 64%, transparent 100%),
