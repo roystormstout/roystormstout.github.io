@@ -1,3 +1,12 @@
+.decorative-patch {
+  --pin-rotate: var(--pin-rest-rotate);
+}
+
+.decorative-patch:hover,
+.decorative-patch:focus-visible {
+  --pin-rotate: var(--pin-hover-rotate);
+}
+
 @keyframes noteSketchReveal {
   0% {
     opacity: 0;
@@ -44,4 +53,41 @@
   opacity: 0;
   animation: noteSketchUnderline 520ms ease-out forwards;
   animation-delay: 460ms;
+}
+
+.note-link {
+  position: relative;
+  padding-bottom: 0.2rem;
+  transition: color 160ms ease, transform 160ms ease, text-shadow 160ms ease;
+}
+
+.note-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.62;
+  transform: scaleX(0.45);
+  transform-origin: left center;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.note-link:hover,
+.note-link:focus-visible {
+  color: #245b63 !important;
+  text-shadow: 0 0 10px rgba(36, 91, 99, 0.16);
+  transform: translateY(-1px) rotate(-0.25deg);
+}
+
+.note-link:hover::after,
+.note-link:focus-visible::after {
+  opacity: 0.9;
+  transform: scaleX(1);
+}
+
+.note-link:active {
+  transform: translateY(1px) rotate(0deg);
 }

@@ -55,7 +55,6 @@ export default function PinLayer({
           size={pin.size}
           initialRotate={pin.initialRotate}
           hoverRotate={pin.hoverRotate}
-          disableAnimation={false}
           draggable={isActivePinSide}
           isDragging={draggingPatch === pin.id}
           swingRotation={patchSwings[pin.id] || 0}

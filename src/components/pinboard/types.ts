@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 
-export type PatchId = 'paper' | 'azure' | 'xbox' | 'mahjong' | 'killstreak' | 'ironman' | 'happyEnding' | 'aussie';
+export type PatchId = 'paper' | 'azure' | 'xbox' | 'mahjong' | 'killstreak' | 'ironman' | 'happyEnding';
 export const boardSides = ['work', 'research', 'play'] as const;
 export type BoardSide = (typeof boardSides)[number];
 

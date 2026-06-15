@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './App.css'
 import Bio from './components/Bio'
 import Pinboard from './components/Pinboard'
 
