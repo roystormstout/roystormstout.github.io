@@ -1,7 +1,14 @@
 import type { CSSProperties } from 'react';
 
-export type PatchId = 'controller' | 'temple' | 'aussie' | 'corgi';
-export type BoardSide = 'professional' | 'hobby';
+export type PatchId = 'paper' | 'azure' | 'xbox' | 'mahjong' | 'killstreak' | 'ironman' | 'happyEnding' | 'aussie';
+export const boardSides = ['work', 'research', 'play'] as const;
+export type BoardSide = (typeof boardSides)[number];
+
+export const boardLabels: Record<BoardSide, string> = {
+  work: 'Work',
+  research: 'Research Lab',
+  play: 'Play Tests',
+};
 
 export type PatchPosition = {
   x: number;
@@ -33,12 +40,13 @@ export type PinboardProps = {
 export type PinConfig = {
   id: PatchId;
   image: string;
-  size: 'md' | 'lg';
+  size: 'sm' | 'md' | 'lg';
   initialRotate: number;
   hoverRotate: number;
   anchor: CSSProperties;
   title: string;
   eyebrow: string;
+  year: string;
   subtitle: string;
   description: string;
   bullets: string[];

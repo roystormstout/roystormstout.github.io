@@ -8,8 +8,8 @@ import PinNote from './pinboard/PinNote';
 import { boardPins } from './pinboard/data';
 import useBoardSize from './pinboard/hooks/useBoardSize';
 import {
+  BOARD_SWITCH_DURATION_MS,
   CLICK_MOVE_THRESHOLD,
-  FLIP_DURATION_MS,
   MAX_SWING,
   MAX_NOTE_DOCK_HEIGHT,
   MIN_NOTE_DOCK_HEIGHT,
@@ -21,22 +21,34 @@ import {
   SWING_TENSION,
 } from './pinboard/constants';
 import { clamp, getNoteLayoutForSize, getNotePinPositionForSize } from './pinboard/layout';
-import type { BoardSide, DragState, PatchId, PatchPosition, PinboardProps, SelectedPin } from './pinboard/types';
+import { boardSides, type BoardSide, type DragState, type PatchId, type PatchPosition, type PinboardProps, type SelectedPin } from './pinboard/types';
+
+const emptySelectedPins: Record<BoardSide, SelectedPin | null> = {
+  work: null,
+  research: null,
+  play: null,
+};
+
+const emptyNoteTextReady: Record<BoardSide, boolean> = {
+  work: false,
+  research: false,
+  play: false,
+};
 
 export default function Pinboard({ onClose }: PinboardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<DragState | null>(null);
   const swingFrame = useRef<number | null>(null);
   const patchSizes = useRef<Partial<Record<PatchId, { width: number; height: number }>>>({});
-  const flipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const selectedPinRef = useRef<SelectedPin | null>(null);
-  const isFlippingRef = useRef(false);
+  const switchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const selectedPinsRef = useRef<Record<BoardSide, SelectedPin | null>>(emptySelectedPins);
+  const isSwitchingRef = useRef(false);
   const lastInteractionMoved = useRef(false);
-  const [activeSide, setActiveSide] = useState<BoardSide>('professional');
+  const [activeSide, setActiveSide] = useState<BoardSide>('work');
   const [draggingPatch, setDraggingPatch] = useState<PatchId | null>(null);
-  const [isFlipping, setIsFlipping] = useState(false);
-  const [selectedPin, setSelectedPin] = useState<SelectedPin | null>(null);
-  const [noteTextReady, setNoteTextReady] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
+  const [selectedPins, setSelectedPins] = useState<Record<BoardSide, SelectedPin | null>>(emptySelectedPins);
+  const [noteTextReady, setNoteTextReady] = useState<Record<BoardSide, boolean>>(emptyNoteTextReady);
   const boardSize = useBoardSize(boardRef);
   const [patchPositions, setPatchPositions] = useState<Partial<Record<PatchId, PatchPosition>>>({});
   const [patchSwings, setPatchSwings] = useState<Partial<Record<PatchId, number>>>({});
@@ -61,20 +73,21 @@ export default function Pinboard({ onClose }: PinboardProps) {
 
   const attachPinToNote = useCallback((side: BoardSide, id: PatchId, previousPosition: PatchPosition, width: number, height: number) => {
     const nextPosition = getNotePinPosition(width, height);
+    const currentPin = selectedPinsRef.current[side];
 
     setPatchPositions((positions) => ({
       ...positions,
-      ...(selectedPinRef.current && selectedPinRef.current.id !== id
-        ? { [selectedPinRef.current.id]: selectedPinRef.current.previousPosition }
+      ...(currentPin && currentPin.id !== id
+        ? { [currentPin.id]: currentPin.previousPosition }
         : {}),
       [id]: nextPosition,
     }));
-    setNoteTextReady(false);
-    setSelectedPin({ side, id, previousPosition });
+    setNoteTextReady((ready) => ({ ...ready, [side]: false }));
+    setSelectedPins((pins) => ({ ...pins, [side]: { side, id, previousPosition } }));
   }, [getNotePinPosition]);
 
-  function detachPinFromNote() {
-    const pin = selectedPinRef.current;
+  function detachPinFromNote(side: BoardSide) {
+    const pin = selectedPinsRef.current[side];
 
     if (!pin) return;
 
@@ -83,37 +96,44 @@ export default function Pinboard({ onClose }: PinboardProps) {
       [pin.id]: pin.previousPosition,
     }));
     lastInteractionMoved.current = false;
-    setNoteTextReady(false);
-    setSelectedPin(null);
+    setNoteTextReady((ready) => ({ ...ready, [side]: false }));
+    setSelectedPins((pins) => ({ ...pins, [side]: null }));
   }
 
   useEffect(() => {
-    selectedPinRef.current = selectedPin;
-  }, [selectedPin]);
+    selectedPinsRef.current = selectedPins;
+  }, [selectedPins]);
 
   useEffect(() => {
-    if (!selectedPin) return;
+    const timeoutIds = (Object.entries(selectedPins) as Array<[BoardSide, SelectedPin | null]>).flatMap(([side, pin]) => {
+      if (!pin) return [];
 
-    const timeoutId = setTimeout(() => {
-      setNoteTextReady(true);
-    }, NOTE_TEXT_DELAY_MS);
+      const timeoutId = setTimeout(() => {
+        setNoteTextReady((ready) => ({ ...ready, [side]: true }));
+      }, NOTE_TEXT_DELAY_MS);
 
-    return () => clearTimeout(timeoutId);
-  }, [selectedPin]);
+      return [timeoutId];
+    });
+
+    return () => {
+      timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
+    };
+  }, [selectedPins]);
 
   useEffect(() => {
-    isFlippingRef.current = isFlipping;
-  }, [isFlipping]);
+    isSwitchingRef.current = isSwitching;
+  }, [isSwitching]);
 
   useEffect(() => {
     setPatchPositions((positions) => {
       const nextPositions: Partial<Record<PatchId, PatchPosition>> = {};
-      const selected = selectedPinRef.current;
+      const selectedPinsBySide = selectedPinsRef.current;
 
       Object.entries(positions).forEach(([id, position]) => {
         if (!position) return;
         const patchId = id as PatchId;
         const size = patchSizes.current[patchId];
+        const selected = Object.values(selectedPinsBySide).find((pin) => pin?.id === patchId);
 
         if (selected?.id === patchId && size) {
           nextPositions[patchId] = getNotePinPositionForSize(boardSize.width, boardSize.height, size.width, size.height);
@@ -205,14 +225,14 @@ export default function Pinboard({ onClose }: PinboardProps) {
         [drag.id]: clamp(drag.velocityX * SWING_FORCE, -MAX_SWING, MAX_SWING),
       }));
 
-      const openPin = selectedPinRef.current;
+      const openPin = selectedPinsRef.current[drag.side];
       if (openPin?.id === drag.id && openPin.side === drag.side) {
         const pinCenterX = nextX + drag.width / 2;
         const pinCenterY = nextY + drag.height / 2;
 
         if (drag.hasMoved && !isPointInsideNote(pinCenterX, pinCenterY)) {
-          setNoteTextReady(false);
-          setSelectedPin(null);
+          setNoteTextReady((ready) => ({ ...ready, [drag.side]: false }));
+          setSelectedPins((pins) => ({ ...pins, [drag.side]: null }));
         }
       }
     }
@@ -231,8 +251,9 @@ export default function Pinboard({ onClose }: PinboardProps) {
           const pinCenterY = drag.currentY + drag.height / 2;
 
           if (isPointInsideNote(pinCenterX, pinCenterY)) {
-            const previousPosition = selectedPinRef.current?.id === drag.id && selectedPinRef.current.side === drag.side
-              ? selectedPinRef.current.previousPosition
+            const selectedPin = selectedPinsRef.current[drag.side];
+            const previousPosition = selectedPin?.id === drag.id && selectedPin.side === drag.side
+              ? selectedPin.previousPosition
               : drag.previousPosition;
 
             attachPinToNote(drag.side, drag.id, previousPosition, drag.width, drag.height);
@@ -253,21 +274,20 @@ export default function Pinboard({ onClose }: PinboardProps) {
       window.removeEventListener('pointerup', handlePointerUp);
       window.removeEventListener('pointercancel', handlePointerUp);
       stopSwing();
-      if (flipTimeout.current) {
-        clearTimeout(flipTimeout.current);
+      if (switchTimeout.current) {
+        clearTimeout(switchTimeout.current);
       }
     };
   }, [attachPinToNote, isPointInsideNote]);
 
-  function startDragging(side: BoardSide, id: PatchId, event: ReactPointerEvent<HTMLDivElement>) {
-    if (isFlipping) return;
+  function startDragging(side: BoardSide, id: PatchId, event: ReactPointerEvent<HTMLElement>) {
+    if (isSwitching) return;
 
     const rect = event.currentTarget.getBoundingClientRect();
     const boardRect = boardRef.current?.getBoundingClientRect();
     const boardLeft = boardRect?.left || 0;
     const boardTop = boardRect?.top || 0;
 
-    event.preventDefault();
     lastInteractionMoved.current = false;
     if (swingFrame.current !== null) {
       cancelAnimationFrame(swingFrame.current);
@@ -314,7 +334,7 @@ export default function Pinboard({ onClose }: PinboardProps) {
   }
 
   function activatePinFromElement(side: BoardSide, id: PatchId, element: HTMLElement) {
-    if (isFlippingRef.current) return;
+    if (isSwitchingRef.current) return;
 
     if (lastInteractionMoved.current) {
       lastInteractionMoved.current = false;
@@ -330,42 +350,40 @@ export default function Pinboard({ onClose }: PinboardProps) {
       y: rect.top - boardTop,
     };
 
-    if (selectedPinRef.current?.id === id && selectedPinRef.current.side === side) {
-      detachPinFromNote();
+    if (selectedPinsRef.current[side]?.id === id && selectedPinsRef.current[side]?.side === side) {
+      detachPinFromNote(side);
       return;
     }
 
     attachPinToNote(side, id, previousPosition, rect.width, rect.height);
   }
 
-  function flipBoard() {
-    if (isFlipping) return;
+  function switchBoard(nextSide: BoardSide) {
+    if (isSwitching || activeSide === nextSide) return;
 
-    setIsFlipping(true);
+    setIsSwitching(true);
     setDraggingPatch(null);
-    setNoteTextReady(false);
-    setSelectedPin(null);
     lastInteractionMoved.current = false;
     dragState.current = null;
-    setActiveSide((side) => (side === 'professional' ? 'hobby' : 'professional'));
+    setActiveSide(nextSide);
 
-    if (flipTimeout.current) {
-      clearTimeout(flipTimeout.current);
+    if (switchTimeout.current) {
+      clearTimeout(switchTimeout.current);
     }
 
-    flipTimeout.current = setTimeout(() => {
-      setIsFlipping(false);
-    }, FLIP_DURATION_MS);
+    switchTimeout.current = setTimeout(() => {
+      setIsSwitching(false);
+    }, BOARD_SWITCH_DURATION_MS);
   }
 
   function getSelectedPinConfig(side: BoardSide) {
-    if (!selectedPin || selectedPin.side !== side) return null;
+    const selectedPin = selectedPins[side];
+    if (!selectedPin) return null;
     return boardPins[side].find((pin) => pin.id === selectedPin.id) || null;
   }
 
   const note = getNoteLayout();
   const dockHeight = getDockHeight();
-  const contentTop = selectedPin ? dockHeight + NOTE_CONTENT_GAP : dockHeight;
 
   return (
     <section
@@ -380,18 +398,20 @@ export default function Pinboard({ onClose }: PinboardProps) {
         `,
       }}
     >
-      <PinboardHeader activeSide={activeSide} isFlipping={isFlipping} onFlip={flipBoard} onClose={onClose} />
+      <PinboardHeader activeSide={activeSide} isSwitching={isSwitching} onSelectBoard={switchBoard} onClose={onClose} />
       <PinboardScene activeSide={activeSide} boardRef={boardRef}>
-        {(['professional', 'hobby'] as BoardSide[]).map((side) => {
+        {boardSides.map((side) => {
           const selectedPinConfig = getSelectedPinConfig(side);
-          const isFilled = Boolean(selectedPin && selectedPin.side === side && selectedPinConfig);
+          const selectedPin = selectedPins[side];
+          const isFilled = Boolean(selectedPin && selectedPinConfig);
+          const contentTop = isFilled ? dockHeight + NOTE_CONTENT_GAP : dockHeight;
 
           return (
-            <BoardFace key={side} side={side} activeSide={activeSide} isFlipping={isFlipping}>
+            <BoardFace key={side} side={side} activeSide={activeSide} isSwitching={isSwitching}>
               <PinLayer
                 side={side}
                 activeSide={activeSide}
-                isFlipping={isFlipping}
+                isSwitching={isSwitching}
                 pins={boardPins[side]}
                 selectedPin={selectedPin}
                 draggingPatch={draggingPatch}
@@ -406,7 +426,7 @@ export default function Pinboard({ onClose }: PinboardProps) {
                 note={note}
                 pin={selectedPinConfig}
                 isFilled={isFilled}
-                noteTextReady={noteTextReady}
+                noteTextReady={noteTextReady[side]}
                 dockHeight={dockHeight}
                 contentTop={contentTop}
               />

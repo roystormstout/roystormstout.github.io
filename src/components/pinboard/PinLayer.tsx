@@ -5,13 +5,13 @@ import type { BoardSide, PatchId, PatchPosition, PinConfig, SelectedPin } from '
 type PinLayerProps = {
   side: BoardSide;
   activeSide: BoardSide;
-  isFlipping: boolean;
+  isSwitching: boolean;
   pins: PinConfig[];
   selectedPin: SelectedPin | null;
   draggingPatch: PatchId | null;
   patchPositions: Partial<Record<PatchId, PatchPosition>>;
   patchSwings: Partial<Record<PatchId, number>>;
-  onPointerDown: (side: BoardSide, id: PatchId, event: ReactPointerEvent<HTMLDivElement>) => void;
+  onPointerDown: (side: BoardSide, id: PatchId, event: ReactPointerEvent<HTMLElement>) => void;
   onActivate: (side: BoardSide, id: PatchId, element: HTMLElement) => void;
 };
 
@@ -31,7 +31,7 @@ function getPatchStyle(id: PatchId, anchoredStyle: CSSProperties, patchPositions
 export default function PinLayer({
   side,
   activeSide,
-  isFlipping,
+  isSwitching,
   pins,
   selectedPin,
   draggingPatch,
@@ -40,7 +40,7 @@ export default function PinLayer({
   onPointerDown,
   onActivate,
 }: PinLayerProps) {
-  const isActivePinSide = !isFlipping && activeSide === side;
+  const isActivePinSide = !isSwitching && activeSide === side;
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function PinLayer({
           image={pin.image}
           style={{
             ...getPatchStyle(pin.id, pin.anchor, patchPositions),
-            zIndex: selectedPin?.id === pin.id && selectedPin.side === side ? 34 : undefined,
+            zIndex: selectedPin?.id === pin.id && selectedPin.side === side ? 42 : 36,
           }}
           size={pin.size}
           initialRotate={pin.initialRotate}
@@ -63,14 +63,8 @@ export default function PinLayer({
           role={isActivePinSide ? 'button' : undefined}
           tabIndex={isActivePinSide ? 0 : -1}
           ariaLabel={isActivePinSide ? `Open details for ${pin.title}` : undefined}
-          onPointerDown={(event) => onPointerDown(side, pin.id, event)}
-          onClick={(event) => onActivate(side, pin.id, event.currentTarget)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              onActivate(side, pin.id, event.currentTarget);
-            }
-          }}
+          onPointerDown={isActivePinSide ? (event) => onPointerDown(side, pin.id, event) : undefined}
+          onClick={isActivePinSide ? (event) => onActivate(side, pin.id, event.currentTarget) : undefined}
         />
       ))}
     </>

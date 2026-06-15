@@ -12,6 +12,12 @@ type PinNoteProps = {
   contentTop: number;
 };
 
+const noteRotations: Record<BoardSide, string> = {
+  work: '-1deg',
+  research: '0.5deg',
+  play: '1deg',
+};
+
 export default function PinNote({ side, activeSide, note, pin, isFilled, noteTextReady, dockHeight, contentTop }: PinNoteProps) {
   if (side !== activeSide) return null;
 
@@ -29,7 +35,7 @@ export default function PinNote({ side, activeSide, note, pin, isFilled, noteTex
         border: '1px solid rgba(84, 50, 25, 0.28)',
         borderRadius: 4,
         boxShadow: '0 18px 34px rgba(33, 18, 8, 0.3), inset 0 1px 0 rgba(255,255,255,0.55)',
-        transform: `rotate(${side === 'professional' ? '-1deg' : '1deg'})`,
+        transform: `rotate(${noteRotations[side]})`,
         fontFamily: '"Inclusive Sans", sans-serif',
       }}
     >
@@ -49,7 +55,11 @@ export default function PinNote({ side, activeSide, note, pin, isFilled, noteTex
       />
       {isFilled && pin && noteTextReady ? (
         <div key={`${side}-${pin.id}`} style={{ paddingTop: contentTop }}>
-          <p className="note-sketch-item mb-2 text-xs font-bold uppercase tracking-[0.2em]" style={{ color: '#865225', '--note-delay': '0ms' } as CSSProperties}>{pin.eyebrow}</p>
+          <p className="note-sketch-item mb-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold uppercase tracking-[0.2em]" style={{ color: '#865225', '--note-delay': '0ms' } as CSSProperties}>
+            <span>{pin.eyebrow}</span>
+            <span aria-hidden>|</span>
+            <time>{pin.year}</time>
+          </p>
           <h3 className="note-sketch-item note-sketch-title pr-10 text-2xl font-black leading-tight sm:text-3xl" style={{ '--note-delay': '120ms' } as CSSProperties}>{pin.title}</h3>
           <p className="note-sketch-item mt-2 text-base font-bold" style={{ color: '#6f4729', '--note-delay': '240ms' } as CSSProperties}>{pin.subtitle}</p>
           <p className="note-sketch-item mt-4 text-base leading-relaxed" style={{ '--note-delay': '360ms' } as CSSProperties}>{pin.description}</p>
@@ -66,10 +76,10 @@ export default function PinNote({ side, activeSide, note, pin, isFilled, noteTex
               href={pin.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="note-sketch-item mt-5 inline-block text-sm font-black uppercase tracking-[0.14em]"
+              className="note-link note-sketch-item mt-5 inline-block text-sm font-black uppercase tracking-[0.14em]"
               style={{ color: '#3c6b72', '--note-delay': `${560 + pin.bullets.length * 110}ms` } as CSSProperties}
             >
-              {pin.linkLabel || 'Open'}
+              {pin.linkLabel || 'Open link'}
             </a>
           )}
         </div>
