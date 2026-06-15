@@ -271,3 +271,226 @@
 .note-link:active {
   transform: translateY(1px) rotate(0deg);
 }
+
+/* ----------------------------------------------------------------------- */
+/* Mobile pinboard: simpler vertical, scrollable corkboard of note cards    */
+/* ----------------------------------------------------------------------- */
+
+.pinboard-mobile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  color: var(--text-primary);
+  background-color: #100f0d;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255, 210, 120, 0.12), transparent 38%),
+    linear-gradient(145deg, #17130f 0%, #090b0d 100%);
+  font-family: "Inclusive Sans", sans-serif;
+}
+
+.pinboard-mobile-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.8rem;
+  background: linear-gradient(180deg, rgba(16, 15, 13, 0.96), rgba(16, 15, 13, 0.78));
+  border-bottom: 1px solid rgba(255, 210, 120, 0.16);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.pinboard-mobile-bar .board-tab-strip {
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.pinboard-mobile-bar .board-tab-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.pinboard-mobile-bar .board-tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.pinboard-mobile-bar .board-tab-bio {
+  flex: 0 0 auto;
+}
+
+.pinboard-mobile-scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem 0.85rem calc(2.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.pinboard-mobile-board {
+  position: relative;
+  text-align: center;
+  border-radius: 12px;
+  padding: 1.35rem 0.9rem 1.5rem;
+  background-color: #8a5432;
+  background-image:
+    repeating-linear-gradient(8deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 13px),
+    repeating-linear-gradient(97deg, rgba(55, 24, 10, 0.12) 0 1px, transparent 1px 17px),
+    linear-gradient(135deg, #9b623a 0%, #70401f 46%, #5c331c 100%);
+  border: clamp(9px, 3vw, 15px) solid #3a2114;
+  box-shadow:
+    0 22px 52px rgba(0, 0, 0, 0.52),
+    inset 0 0 60px rgba(45, 22, 10, 0.55),
+    inset 0 2px 0 rgba(255, 240, 190, 0.16);
+}
+
+.board-title-note.pinboard-mobile-title {
+  position: relative;
+  width: auto;
+  min-height: 0;
+  margin: 0 auto 1.5rem;
+  display: inline-flex;
+  padding: 0.85rem 1.4rem 0.7rem;
+  transform: rotate(-1.5deg);
+}
+
+.pin-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  text-align: left;
+  animation: pinCardStackIn 360ms cubic-bezier(0.2, 0.72, 0.24, 1);
+}
+
+@keyframes pinCardStackIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pin-card {
+  position: relative;
+  padding: 1.6rem 1.05rem 1.15rem;
+  color: #2d2015;
+  background-color: #f3dfb2;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 42%),
+    repeating-linear-gradient(0deg, transparent 0 28px, rgba(90, 60, 35, 0.08) 29px);
+  border: 1px solid rgba(84, 50, 25, 0.28);
+  border-radius: 6px;
+  box-shadow: 0 12px 24px rgba(33, 18, 8, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.pin-card:nth-child(odd) {
+  transform: rotate(-0.5deg);
+}
+
+.pin-card:nth-child(even) {
+  transform: rotate(0.55deg);
+}
+
+.pin-card::before {
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: 1.4rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 32%, #fff7cf 0 12%, #ffd278 26%, #b07a34 70%, #4a2a16 100%);
+  box-shadow: 0 3px 6px rgba(28, 14, 5, 0.4);
+}
+
+.pin-card-badge {
+  position: absolute;
+  top: -0.9rem;
+  right: 0.7rem;
+  width: clamp(3.9rem, 22vw, 5.4rem);
+  transform: rotate(6deg);
+  filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.4));
+  pointer-events: none;
+}
+
+.pin-card-badge img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pin-card-eyebrow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.18rem;
+  margin: 0 0 0.3rem;
+  padding-right: 4.6rem;
+  color: #865225;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pin-card-title {
+  margin: 0;
+  padding-right: 4.6rem;
+  font-size: 1.22rem;
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.pin-card-subtitle {
+  margin: 0.3rem 0 0;
+  color: #6f4729;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.pin-card-desc {
+  margin: 0.65rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.pin-card-bullets {
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.pin-card-bullets li {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.pin-card-bullets li span:first-child {
+  color: #9c622d;
+}
+
+.pin-card-link {
+  display: inline-block;
+  margin-top: 0.9rem;
+  color: #3c6b72;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

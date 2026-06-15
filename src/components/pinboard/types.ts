@@ -46,7 +46,6 @@ export type PinConfig = {
   hoverRotate: number;
   anchor: CSSProperties;
   title: string;
-  eyebrow: string;
   year: string;
   subtitle: string;
   description: string;

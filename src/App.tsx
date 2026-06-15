@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import Bio from './components/Bio'
 import Pinboard from './components/Pinboard'
+import PinboardMobile from './components/PinboardMobile'
+import useIsMobile from './components/pinboard/hooks/useIsMobile'
 
 function App() {
   const [activeView, setActiveView] = useState<'bio' | 'pinboard'>('bio')
   const isBioActive = activeView === 'bio'
   const isPinboardActive = activeView === 'pinboard'
+  const isMobile = useIsMobile()
 
   return (
     <div className="relative w-full h-screen overflow-hidden" style={{backgroundColor: 'var(--bg-primary)'}}>
@@ -25,7 +28,11 @@ function App() {
         style={{ pointerEvents: isPinboardActive ? 'auto' : 'none', zIndex: isPinboardActive ? 20 : 0 }}
         aria-hidden={!isPinboardActive}
       >
-        <Pinboard onClose={() => setActiveView('bio')} />
+        {isMobile ? (
+          <PinboardMobile onClose={() => setActiveView('bio')} />
+        ) : (
+          <Pinboard onClose={() => setActiveView('bio')} />
+        )}
       </div>
     </div>
   )

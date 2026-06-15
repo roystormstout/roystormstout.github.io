@@ -56,8 +56,6 @@ export default function PinNote({ side, isVisible, note, pin, isFilled, noteText
       {isFilled && pin && noteTextReady ? (
         <div key={`${side}-${pin.id}`} style={{ paddingTop: contentTop }}>
           <p className="note-sketch-item mb-2 flex flex-wrap gap-x-3 gap-y-1 text-xs font-bold uppercase tracking-[0.2em]" style={{ color: '#865225', '--note-delay': '0ms' } as CSSProperties}>
-            <span>{pin.eyebrow}</span>
-            <span aria-hidden>|</span>
             <time>{pin.year}</time>
           </p>
           <h3 className="note-sketch-item note-sketch-title pr-10 text-2xl font-black leading-tight sm:text-3xl" style={{ '--note-delay': '120ms' } as CSSProperties}>{pin.title}</h3>
