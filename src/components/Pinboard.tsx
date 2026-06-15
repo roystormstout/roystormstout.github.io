@@ -437,7 +437,7 @@ export default function Pinboard({ onClose }: PinboardProps) {
   return (
     <section
       id="pinboard"
-      className="relative h-screen overflow-hidden px-4 py-4 sm:px-8 sm:py-7"
+      className="relative h-full overflow-hidden px-4 py-4 sm:px-8 sm:py-7"
       style={{
         color: 'var(--text-primary)',
         backgroundColor: '#100f0d',

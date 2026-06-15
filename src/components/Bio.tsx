@@ -77,7 +77,7 @@ export default function Bio({ onOpenPinboard }: BioProps) {
   return (
     <section
       id="bio"
-      className="relative h-screen flex flex-col items-center justify-center px-6 overflow-hidden"
+      className="relative h-full flex flex-col items-center justify-center px-6 overflow-hidden"
       style={{ fontFamily: '"Bodoni Moda", serif', color: 'var(--text-primary)' }}
     >
       <div

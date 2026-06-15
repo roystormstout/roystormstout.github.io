@@ -11,7 +11,7 @@ function App() {
   const isMobile = useIsMobile()
 
   return (
-    <div className="relative w-full h-screen overflow-hidden" style={{backgroundColor: 'var(--bg-primary)'}}>
+    <div className="relative w-full h-full overflow-hidden" style={{backgroundColor: 'var(--bg-primary)'}}>
       <div
         className={`absolute inset-0 transition-all duration-700 ease-out ${
           isBioActive ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8 scale-[0.98]'
