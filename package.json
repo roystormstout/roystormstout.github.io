@@ -3,12 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "games/game1"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev:game1": "npm --workspace @ultroy/game1 run dev",
+    "build": "npm run build:site && npm run build:game1",
+    "build:site": "tsc -b && vite build",
+    "build:game1": "npm --workspace @ultroy/game1 run build",
     "lint": "eslint .",
     "optimize:pins": "node scripts/optimize-pins.mjs",
     "preview": "vite preview",
+    "preview:game1": "npm --workspace @ultroy/game1 run preview",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {

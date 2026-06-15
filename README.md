@@ -57,7 +57,30 @@ npm run deploy
 - `src/components/pinboard/data.ts` is the source of truth for board content and pin IDs.
 - `src/components/pinboard/hooks/` contains board switching, selected pin state, drag behavior, note docking, size, mobile, and reduced-motion hooks.
 - `src/assets/pins/` stores the pin artwork used by the board.
+- `games/game1/` contains a standalone game app skeleton that builds to `/games/game1/`.
 - `public/CNAME` sets the custom GitHub Pages domain.
+
+## Games
+
+Game apps live under `games/` as separate packages. `games/game1` is a Vite/React skeleton configured with `base: '/games/game1/'` and builds into `dist/games/game1`.
+
+Run the game locally:
+
+```bash
+npm run dev:game1
+```
+
+Build the portfolio and game together:
+
+```bash
+npm run build
+```
+
+Build only the game:
+
+```bash
+npm run build:game1
+```
 
 ## Editing Pinboard Content
 
