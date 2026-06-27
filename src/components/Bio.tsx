@@ -124,19 +124,11 @@ export default function Bio({ onOpenPinboard, onPreloadPinboard }: BioProps) {
         onFocus={onPreloadPinboard}
         onPointerDown={onPreloadPinboard}
         onPointerEnter={onPreloadPinboard}
-        className="group absolute bottom-8 left-1/2 z-20 -translate-x-1/2 px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] transition-all duration-300 hover:-translate-y-1"
-        style={{
-          color: 'var(--text-primary)',
-          backgroundColor: 'rgba(18, 24, 35, 0.72)',
-          borderColor: 'var(--accent-amber)',
-          boxShadow: '0 0 18px rgba(255, 210, 120, 0.16)',
-        }}
+        className="bio-cta"
+        aria-label="Open pinboard"
       >
-        Pinboard
-        <span
-          className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-transform duration-300 group-hover:scale-125"
-          style={{ backgroundColor: 'var(--accent-amber)', boxShadow: '0 0 12px var(--accent-amber)' }}
-        />
+        <span className="bio-cta-label">Pinboard</span>
+        <span className="bio-cta-line" aria-hidden />
       </button>
     </section>
   );

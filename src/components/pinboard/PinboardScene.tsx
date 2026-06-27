@@ -1,4 +1,5 @@
 import type { ReactNode, RefObject } from 'react';
+import { BOARD_SWITCH_DURATION_MS } from './constants';
 import type { BoardSide, BoardTransition } from './types';
 
 type PinboardSceneProps = {
@@ -26,10 +27,12 @@ export default function PinboardScene({ activeSide, isSwitching, isResetting, tr
       />
       <div
         ref={boardRef}
-        className={isResetting ? 'relative h-full w-full' : 'relative h-full w-full transition-transform duration-[900ms] ease-out'}
+        className="relative h-full w-full"
         style={{
           transform: `rotate(${baseRotation}deg) rotateY(${switchRotation}deg)`,
           transformStyle: 'preserve-3d',
+          transition: isResetting ? 'none' : `transform ${BOARD_SWITCH_DURATION_MS}ms cubic-bezier(0.65, 0, 0.35, 1)`,
+          willChange: isSwitching ? 'transform' : 'auto',
         }}
       >
         {children}

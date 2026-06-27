@@ -19,6 +19,10 @@ function getNextBoard(side: BoardSide) {
   return boardSides[(getBoardIndex(side) + 1) % boardSides.length];
 }
 
+function getPreviousBoard(side: BoardSide) {
+  return boardSides[(getBoardIndex(side) - 1 + boardSides.length) % boardSides.length];
+}
+
 type UseBoardSwitchOptions = {
   reduceMotion: boolean;
 };
@@ -95,6 +99,7 @@ export default function useBoardSwitch({ reduceMotion }: UseBoardSwitchOptions) 
     isSwitching,
     isSwitchingRef,
     nextSide: getNextBoard(activeSide),
+    previousSide: getPreviousBoard(activeSide),
     switchBoard,
   };
 }

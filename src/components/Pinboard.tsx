@@ -8,7 +8,9 @@ import PinNote from './pinboard/PinNote';
 import { boardPins, type PatchId } from './pinboard/data';
 import useBoardSize from './pinboard/hooks/useBoardSize';
 import { NOTE_CONTENT_GAP } from './pinboard/constants';
+import { BOARD_KEY_CONTROLS } from './pinboard/controls';
 import useBoardSwitch from './pinboard/hooks/useBoardSwitch';
+import useKeyboardControls from './pinboard/hooks/useKeyboardControls';
 import useNoteDock, { useDockedPinResize } from './pinboard/hooks/useNoteDock';
 import usePinDrag from './pinboard/hooks/usePinDrag';
 import usePrefersReducedMotion from './pinboard/hooks/usePrefersReducedMotion';
@@ -22,7 +24,7 @@ import {
   type PinboardProps,
 } from './pinboard/types';
 
-export default function Pinboard({ onClose }: PinboardProps) {
+export default function Pinboard({ onClose, active = true }: PinboardProps) {
   const boardRef = useRef<HTMLDivElement>(null);
   const reduceMotion = usePrefersReducedMotion();
   const boardSize = useBoardSize(boardRef);
@@ -36,6 +38,7 @@ export default function Pinboard({ onClose }: PinboardProps) {
     isSwitching,
     isSwitchingRef,
     nextSide,
+    previousSide,
     switchBoard,
   } = useBoardSwitch({ reduceMotion });
   const {
@@ -84,16 +87,25 @@ export default function Pinboard({ onClose }: PinboardProps) {
     }
   }
 
+  useKeyboardControls(
+    [
+      { keys: BOARD_KEY_CONTROLS.previousBoard, action: () => handleSwitchBoard(previousSide, -1) },
+      { keys: BOARD_KEY_CONTROLS.nextBoard, action: () => handleSwitchBoard(nextSide, 1) },
+      { keys: BOARD_KEY_CONTROLS.back, action: () => onClose(), allowInInput: true },
+    ],
+    { enabled: active },
+  );
+
   return (
     <section
       id="pinboard"
       className="relative h-full overflow-hidden px-4 py-4 sm:px-8 sm:py-7"
       style={{
         color: 'var(--text-primary)',
-        backgroundColor: '#100f0d',
+        backgroundColor: '#0e0d0b',
         backgroundImage: `
-          radial-gradient(circle at 50% 0%, rgba(255, 210, 120, 0.12), transparent 36%),
-          linear-gradient(145deg, #17130f 0%, #090b0d 100%)
+          radial-gradient(120% 75% at 50% -10%, rgba(214, 198, 168, 0.05), transparent 62%),
+          linear-gradient(165deg, #131210 0%, #0a0a0b 100%)
         `,
       }}
     >
@@ -119,7 +131,6 @@ export default function Pinboard({ onClose }: PinboardProps) {
               activeSide={activeSide}
               isSwitching={isSwitching}
               transition={boardTransition}
-              nextSide={nextSide}
               onFlipBoard={() => handleSwitchBoard(nextSide, 1)}
             >
               {isFaceVisible && (

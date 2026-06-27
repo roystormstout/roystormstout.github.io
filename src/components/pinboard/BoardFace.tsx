@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { boardLabels, type BoardSide } from './types';
+import { boardLabels, boardSides, type BoardSide } from './types';
 import type { BoardTransition } from './types';
 
 type BoardFaceProps = {
@@ -7,7 +7,6 @@ type BoardFaceProps = {
   activeSide: BoardSide;
   isSwitching: boolean;
   transition: BoardTransition | null;
-  nextSide: BoardSide;
   onFlipBoard: () => void;
   children: ReactNode;
 };
@@ -21,44 +20,46 @@ const faceStyles: Record<BoardSide, {
   innerShadow: string;
 }> = {
   work: {
-    backgroundColor: '#8a5432',
+    backgroundColor: '#6b5743',
     backgroundImage: `
-      repeating-linear-gradient(8deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 13px),
-      repeating-linear-gradient(97deg, rgba(55,24,10,0.12) 0 1px, transparent 1px 17px),
-      linear-gradient(72deg, rgba(255, 232, 184, 0.08), transparent 28%, rgba(45, 20, 8, 0.16) 64%, transparent 100%),
-      linear-gradient(115deg, rgba(255, 229, 166, 0.14), transparent 34%),
-      linear-gradient(135deg, #9b623a 0%, #70401f 46%, #5c331c 100%)
+      radial-gradient(40% 32% at 22% 20%, rgba(34, 24, 14, 0.12), transparent 70%),
+      radial-gradient(34% 26% at 80% 74%, rgba(36, 26, 16, 0.1), transparent 72%),
+      repeating-linear-gradient(7deg, rgba(232, 222, 200, 0.016) 0 1px, transparent 1px 19px),
+      repeating-linear-gradient(99deg, rgba(28, 19, 10, 0.04) 0 1px, transparent 1px 23px),
+      linear-gradient(135deg, #6f5b46 0%, #574734 52%, #453829 100%)
     `,
-    boxShadow: '0 28px 70px rgba(0, 0, 0, 0.55), inset 0 0 70px rgba(45, 22, 10, 0.58), inset 0 2px 0 rgba(255, 240, 190, 0.18)',
-    frameColor: '#3a2114',
-    frameHighlight: 'rgba(255, 214, 143, 0.2)',
-    innerShadow: 'inset 8px 10px 28px rgba(0, 0, 0, 0.18), inset -5px -4px 20px rgba(255, 228, 168, 0.08)',
+    boxShadow: '0 18px 50px rgba(0, 0, 0, 0.36), inset 0 0 100px rgba(32, 23, 13, 0.4)',
+    frameColor: '#3b3125',
+    frameHighlight: 'rgba(214, 198, 166, 0.1)',
+    innerShadow: 'inset 5px 7px 26px rgba(0, 0, 0, 0.13), inset -4px -3px 18px rgba(228, 214, 180, 0.035)',
   },
   research: {
-    backgroundColor: '#80553a',
+    backgroundColor: '#675847',
     backgroundImage: `
-      repeating-linear-gradient(-6deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 14px),
-      repeating-linear-gradient(84deg, rgba(47,25,12,0.13) 0 1px, transparent 1px 18px),
-      linear-gradient(68deg, rgba(238, 219, 168, 0.12), transparent 31%, rgba(34, 24, 13, 0.18) 72%, transparent 100%),
-      linear-gradient(132deg, #91613f 0%, #6b472d 48%, #4f301f 100%)
+      radial-gradient(38% 30% at 20% 78%, rgba(32, 24, 15, 0.12), transparent 70%),
+      radial-gradient(32% 26% at 82% 22%, rgba(34, 26, 17, 0.09), transparent 72%),
+      repeating-linear-gradient(-5deg, rgba(232, 224, 204, 0.014) 0 1px, transparent 1px 20px),
+      repeating-linear-gradient(86deg, rgba(26, 18, 11, 0.04) 0 1px, transparent 1px 24px),
+      linear-gradient(132deg, #6a5b48 0%, #534636 52%, #423629 100%)
     `,
-    boxShadow: '0 28px 70px rgba(0, 0, 0, 0.55), inset 0 0 74px rgba(38, 24, 12, 0.58), inset 0 2px 0 rgba(244, 229, 181, 0.16)',
-    frameColor: '#342618',
-    frameHighlight: 'rgba(244, 222, 169, 0.19)',
-    innerShadow: 'inset 8px 10px 30px rgba(0, 0, 0, 0.2), inset -6px -5px 22px rgba(243, 226, 184, 0.07)',
+    boxShadow: '0 18px 50px rgba(0, 0, 0, 0.36), inset 0 0 104px rgba(28, 21, 13, 0.4)',
+    frameColor: '#383023',
+    frameHighlight: 'rgba(212, 198, 168, 0.09)',
+    innerShadow: 'inset 5px 7px 28px rgba(0, 0, 0, 0.15), inset -5px -4px 20px rgba(226, 214, 184, 0.03)',
   },
   play: {
-    backgroundColor: '#84503a',
+    backgroundColor: '#6d5742',
     backgroundImage: `
-      repeating-linear-gradient(-10deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 12px),
-      repeating-linear-gradient(78deg, rgba(52,21,12,0.13) 0 1px, transparent 1px 16px),
-      linear-gradient(70deg, rgba(255, 208, 144, 0.1), transparent 32%, rgba(36, 15, 10, 0.16) 68%, transparent 100%),
-      linear-gradient(135deg, #9a644a 0%, #71432e 46%, #552d1f 100%)
+      radial-gradient(40% 30% at 24% 76%, rgba(34, 23, 14, 0.12), transparent 70%),
+      radial-gradient(32% 26% at 78% 24%, rgba(36, 25, 16, 0.09), transparent 72%),
+      repeating-linear-gradient(-9deg, rgba(233, 223, 201, 0.014) 0 1px, transparent 1px 18px),
+      repeating-linear-gradient(80deg, rgba(28, 18, 10, 0.04) 0 1px, transparent 1px 22px),
+      linear-gradient(135deg, #715b45 0%, #564631 50%, #443728 100%)
     `,
-    boxShadow: '0 28px 70px rgba(0, 0, 0, 0.55), inset 0 0 70px rgba(42, 18, 12, 0.56), inset 0 2px 0 rgba(255, 226, 188, 0.14)',
-    frameColor: '#321b16',
-    frameHighlight: 'rgba(255, 206, 168, 0.18)',
-    innerShadow: 'inset 7px 10px 30px rgba(0, 0, 0, 0.2), inset -6px -5px 22px rgba(255, 216, 180, 0.08)',
+    boxShadow: '0 18px 50px rgba(0, 0, 0, 0.36), inset 0 0 100px rgba(32, 22, 13, 0.38)',
+    frameColor: '#3a2f23',
+    frameHighlight: 'rgba(216, 196, 166, 0.09)',
+    innerShadow: 'inset 5px 7px 28px rgba(0, 0, 0, 0.15), inset -5px -4px 20px rgba(228, 212, 180, 0.035)',
   },
 };
 
@@ -68,7 +69,7 @@ const titleNoteRotations: Record<BoardSide, string> = {
   play: '-1.25deg',
 };
 
-export default function BoardFace({ side, activeSide, isSwitching, transition, nextSide, onFlipBoard, children }: BoardFaceProps) {
+export default function BoardFace({ side, activeSide, isSwitching, transition, onFlipBoard, children }: BoardFaceProps) {
   const isActive = activeSide === side;
   const isTransitionOutgoing = isSwitching && transition?.fromSide === side;
   const isTransitionIncoming = isSwitching && transition?.toSide === side;
@@ -76,6 +77,7 @@ export default function BoardFace({ side, activeSide, isSwitching, transition, n
   const transitionDirection = transition?.direction || 1;
   const isVisible = isActive || isTransitionOutgoing || isTransitionIncoming;
   const faceTransform = isTransitionIncoming ? `rotateY(${transitionDirection * 180}deg)` : 'rotateY(0deg)';
+  const faceNextSide = boardSides[(boardSides.indexOf(side) + 1) % boardSides.length];
 
   return (
     <div
@@ -92,6 +94,7 @@ export default function BoardFace({ side, activeSide, isSwitching, transition, n
         pointerEvents: isActive && !isSwitching ? 'auto' : 'none',
         transformOrigin: 'center center',
         backfaceVisibility: 'hidden',
+        willChange: isSwitching && isVisible ? 'transform' : 'auto',
       }}
     >
       <div
@@ -107,12 +110,12 @@ export default function BoardFace({ side, activeSide, isSwitching, transition, n
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          border: `clamp(12px, 2vw, 24px) solid ${faceStyle.frameColor}`,
-          boxShadow: `inset 0 0 0 1px ${faceStyle.frameHighlight}, inset 0 0 30px rgba(0, 0, 0, 0.42)`,
+          border: `clamp(9px, 1.5vw, 16px) solid ${faceStyle.frameColor}`,
+          boxShadow: `inset 0 0 0 1px ${faceStyle.frameHighlight}, inset 0 0 24px rgba(0, 0, 0, 0.3)`,
         }}
       />
       <div
-        className="pointer-events-none absolute inset-[clamp(12px,2vw,24px)]"
+        className="pointer-events-none absolute inset-[clamp(9px,1.5vw,16px)]"
         style={{
           boxShadow: faceStyle.innerShadow,
         }}
@@ -123,16 +126,17 @@ export default function BoardFace({ side, activeSide, isSwitching, transition, n
       >
         {boardLabels[side]}
       </h2>
-      {isActive && !isSwitching && (
+      {isVisible && (
         <button
           type="button"
           className="board-flip-button absolute right-5 top-6 z-[38] sm:right-9 sm:top-9"
           onClick={onFlipBoard}
-          disabled={isSwitching}
-          aria-label={`Flip to ${boardLabels[nextSide]}`}
+          disabled={isSwitching || !isActive}
+          aria-keyshortcuts="ArrowRight D"
+          aria-label={`Flip to ${boardLabels[faceNextSide]}`}
         >
           <span>Next</span>
-          <strong>{boardLabels[nextSide]}</strong>
+          <strong>{boardLabels[faceNextSide]}</strong>
         </button>
       )}
       {children}

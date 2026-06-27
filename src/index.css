@@ -76,6 +76,56 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* === Bio → Pinboard call-to-action === */
+.bio-cta {
+  position: absolute;
+  bottom: clamp(2.6rem, 5vh, 3.6rem);
+  left: 50%;
+  z-index: 20;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.85rem, 2vh, 1.3rem);
+  padding: 0.6rem 0.9rem;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--text-tertiary);
+  font-family: "Inclusive Sans", sans-serif;
+  font-size: clamp(0.9rem, 0.55rem + 0.7vw, 1.2rem);
+  font-weight: 500;
+  letter-spacing: 0.36em;
+  text-indent: 0.36em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 480ms ease;
+}
+
+.bio-cta-line {
+  width: 1px;
+  height: clamp(1.9rem, 4.5vh, 3rem);
+  background: linear-gradient(to bottom, currentColor, transparent);
+  opacity: 0.5;
+  transition: height 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 480ms ease;
+}
+
+.bio-cta:hover,
+.bio-cta:focus-visible {
+  color: var(--text-primary);
+}
+
+.bio-cta:hover .bio-cta-line,
+.bio-cta:focus-visible .bio-cta-line {
+  height: clamp(2.7rem, 6vh, 4rem);
+  opacity: 0.82;
+}
+
+.bio-cta:focus,
+.bio-cta:focus-visible {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -8,7 +8,7 @@
 }
 
 .decorative-patch:focus-visible {
-  outline: 3px solid rgba(94, 225, 255, 0.9) !important;
+  outline: 3px solid rgba(214, 200, 170, 0.85) !important;
   outline-offset: 0.35rem !important;
   border-radius: 0.75rem !important;
 }
@@ -27,162 +27,167 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.25rem;
 }
 
 .board-tab {
   min-height: 2rem;
-  padding: 0.46rem 0.82rem 0.38rem;
-  color: rgba(255, 242, 210, 0.88);
-  background: linear-gradient(180deg, rgba(111, 64, 32, 0.92), rgba(58, 31, 18, 0.92));
-  border: 1px solid rgba(255, 210, 120, 0.34);
-  border-bottom-color: rgba(51, 27, 15, 0.85);
-  border-radius: 6px 6px 3px 3px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 226, 169, 0.12);
-  font-size: 0.64rem;
-  font-weight: 850;
-  letter-spacing: 0.16em;
+  padding: 0.52rem 0.92rem 0.44rem;
+  color: rgba(224, 212, 188, 0.6);
+  background: linear-gradient(180deg, rgba(70, 58, 44, 0.55), rgba(46, 38, 28, 0.58));
+  border: 1px solid rgba(206, 190, 158, 0.12);
+  border-bottom-color: rgba(0, 0, 0, 0.24);
+  border-radius: 3px 5px 2px 4px;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.14);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
   line-height: 1;
   text-transform: uppercase;
-  transition: transform 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 260ms ease,
+    color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
 }
 
+/* Active tab = the same aged washi as the board's paper notes */
 .board-tab[data-active="true"] {
-  color: #281a0d;
-  background: linear-gradient(180deg, #e4bf72, #c99a4d);
-  border-color: rgba(255, 232, 172, 0.72);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 244, 205, 0.36);
-  transform: translateY(2px);
+  color: #3c3428;
+  background: linear-gradient(180deg, #e7ded0, #d8ccb8);
+  border-color: rgba(206, 190, 158, 0.5);
+  box-shadow: 0 5px 13px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(250, 245, 234, 0.4);
+  transform: translateY(1px);
 }
 
 .board-tab:hover:not(:disabled),
 .board-tab:focus-visible:not(:disabled) {
-  color: #fff1c8;
-  border-color: rgba(255, 210, 120, 0.58);
-  box-shadow: 0 9px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 226, 169, 0.18);
-  transform: translateY(-1px);
+  color: rgba(236, 226, 206, 0.9);
+  border-color: rgba(206, 190, 158, 0.26);
+  background: linear-gradient(180deg, rgba(86, 70, 52, 0.6), rgba(56, 46, 34, 0.62));
+  transform: translateY(-2px);
 }
 
 .board-tab:disabled {
   cursor: default;
 }
 
+/* Bio tab = a quiet sumi-ink slate, a bridge back to the dark Bio page */
 .board-tab-bio {
-  margin-left: 0.25rem;
-  background: linear-gradient(180deg, rgba(20, 24, 27, 0.84), rgba(9, 11, 13, 0.82));
+  margin-left: 0.5rem;
+  color: rgba(214, 208, 196, 0.56);
+  background: linear-gradient(180deg, rgba(38, 35, 30, 0.66), rgba(20, 18, 15, 0.7));
+  border-color: rgba(196, 186, 168, 0.16);
+}
+
+.board-tab-bio:hover:not(:disabled),
+.board-tab-bio:focus-visible:not(:disabled) {
+  color: rgba(234, 228, 214, 0.92);
+  border-color: rgba(206, 196, 176, 0.3);
+  background: linear-gradient(180deg, rgba(48, 44, 37, 0.72), rgba(26, 23, 19, 0.74));
 }
 
 .board-title-note {
   width: min(13rem, calc(100% - 3rem));
-  min-height: 4.75rem;
+  min-height: 4.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 1.15rem 0.8rem;
-  color: #342113;
-  background-color: #f1dfb3;
+  padding: 1rem 1.2rem 0.85rem;
+  color: #3c3428;
+  background-color: #e7ded0;
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.38), transparent 52%),
-    repeating-linear-gradient(0deg, transparent 0 21px, rgba(110, 74, 37, 0.08) 22px),
-    linear-gradient(135deg, #f7e9c6 0%, #dec68f 100%);
-  border: 1px solid rgba(76, 48, 24, 0.26);
-  border-radius: 3px;
-  box-shadow: 0 16px 24px rgba(29, 15, 6, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.52);
+    radial-gradient(60% 50% at 18% 16%, rgba(120, 96, 60, 0.05), transparent 64%),
+    radial-gradient(54% 44% at 84% 80%, rgba(120, 96, 60, 0.045), transparent 66%),
+    linear-gradient(135deg, #eae0cd 0%, #dccdb2 100%);
+  border: 1px solid rgba(74, 58, 36, 0.18);
+  border-radius: 3px 6px 2px 5px;
+  box-shadow: 0 12px 22px rgba(28, 20, 10, 0.16), inset 0 1px 0 rgba(252, 248, 240, 0.32);
   font-family: "Inclusive Sans", sans-serif;
-  font-size: 1.55rem;
+  font-size: 1.5rem;
   font-style: italic;
-  font-weight: 650;
-  letter-spacing: 0.015em;
-  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
   text-align: center;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  text-shadow: 0 1px 0 rgba(252, 248, 240, 0.22);
 }
 
 .board-title-note::before {
   content: '';
   position: absolute;
-  top: -0.85rem;
+  top: -0.7rem;
   left: 50%;
-  width: 5.8rem;
-  height: 1.45rem;
-  transform: translateX(-50%) rotate(2deg);
-  background-color: rgba(226, 205, 151, 0.82);
-  box-shadow: 0 3px 8px rgba(47, 28, 13, 0.16);
-}
-
-.board-title-note::after {
-  content: '';
-  position: absolute;
-  left: 0.9rem;
-  right: 1rem;
-  bottom: 0.65rem;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(84, 51, 25, 0.44), rgba(84, 51, 25, 0));
-  transform: rotate(-1deg);
+  width: 5.2rem;
+  height: 1.25rem;
+  transform: translateX(-50%) rotate(1.5deg);
+  background-color: rgba(222, 213, 195, 0.5);
+  box-shadow: 0 2px 6px rgba(40, 28, 14, 0.08);
 }
 
 .board-flip-button {
   display: flex;
-  min-width: 7.3rem;
+  min-width: 7rem;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.1rem;
-  padding: 0.58rem 0.78rem 0.52rem;
-  color: #352012;
-  background-color: #ead1a0;
+  gap: 0.18rem;
+  padding: 0.58rem 0.82rem 0.54rem;
+  color: #3c3428;
+  background-color: #e3d8c2;
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.26), transparent 55%),
-    linear-gradient(135deg, #f2deae 0%, #d5b77c 100%);
-  border: 1px solid rgba(73, 43, 20, 0.26);
-  border-radius: 4px;
-  box-shadow: 0 12px 20px rgba(28, 14, 6, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    radial-gradient(58% 60% at 80% 18%, rgba(120, 96, 60, 0.05), transparent 66%),
+    linear-gradient(135deg, #e8ddc8 0%, #d6c8ad 100%);
+  border: 1px solid rgba(74, 58, 36, 0.18);
+  border-radius: 3px 5px 2px 4px;
+  box-shadow: 0 9px 18px rgba(28, 20, 10, 0.14), inset 0 1px 0 rgba(252, 248, 240, 0.3);
   font-family: "Inclusive Sans", sans-serif;
-  transform: rotate(2.5deg);
-  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  transform: rotate(1.5deg);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease, filter 220ms ease;
 }
 
 .board-flip-button::before {
   content: '';
   position: absolute;
   left: 50%;
-  top: -0.55rem;
-  width: 3.3rem;
-  height: 0.82rem;
-  transform: translateX(-50%) rotate(-4deg);
-  background-color: rgba(226, 205, 151, 0.78);
-  box-shadow: 0 3px 7px rgba(47, 28, 13, 0.14);
+  top: -0.5rem;
+  width: 3rem;
+  height: 0.7rem;
+  transform: translateX(-50%) rotate(-3deg);
+  background-color: rgba(222, 213, 195, 0.5);
+  box-shadow: 0 2px 5px rgba(40, 28, 14, 0.08);
 }
 
 .board-flip-button span {
-  font-size: 0.56rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-size: 0.54rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   line-height: 1;
   text-transform: uppercase;
-  color: rgba(84, 52, 25, 0.72);
+  color: rgba(110, 92, 64, 0.62);
 }
 
 .board-flip-button strong {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-style: italic;
-  font-weight: 720;
+  font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.05;
 }
 
 .board-flip-button:hover,
 .board-flip-button:focus-visible {
-  border-color: rgba(86, 49, 22, 0.34);
-  box-shadow: 0 16px 24px rgba(28, 14, 6, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  filter: saturate(1.04);
-  transform: rotate(1deg) translateY(-2px);
+  border-color: rgba(86, 49, 22, 0.26);
+  box-shadow: 0 13px 22px rgba(28, 14, 6, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  filter: saturate(1.02);
+  transform: rotate(0.5deg) translateY(-2px);
 }
 
 .board-flip-button:disabled {
   cursor: default;
-  opacity: 0.72;
-  transform: rotate(2deg);
+  opacity: 1;
+  transform: rotate(1.5deg);
 }
 
 @media (max-width: 640px) {
@@ -243,7 +248,7 @@
   width: min(10rem, 55%);
   height: 2px;
   margin-top: 0.45rem;
-  background: linear-gradient(90deg, rgba(134, 82, 37, 0.72), rgba(134, 82, 37, 0));
+  background: linear-gradient(90deg, rgba(104, 86, 56, 0.6), rgba(104, 86, 56, 0));
   transform: scaleX(0);
   transform-origin: left center;
   opacity: 0;
@@ -273,8 +278,8 @@
 
 .note-link:hover,
 .note-link:focus-visible {
-  color: #245b63 !important;
-  text-shadow: 0 0 10px rgba(36, 91, 99, 0.16);
+  color: #4a5a52 !important;
+  text-shadow: 0 0 10px rgba(74, 90, 82, 0.14);
   transform: translateY(-1px) rotate(-0.25deg);
 }
 
@@ -288,6 +293,29 @@
   transform: translateY(1px) rotate(0deg);
 }
 
+/* Thin, warm scrollbar so the note's overflow control reads as paper, not chrome */
+.pinboard-note {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 80, 40, 0.3) transparent;
+}
+
+.pinboard-note::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pinboard-note::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pinboard-note::-webkit-scrollbar-thumb {
+  background: rgba(120, 80, 40, 0.3);
+  border-radius: 999px;
+}
+
+.pinboard-note::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 80, 40, 0.46);
+}
+
 /* ----------------------------------------------------------------------- */
 /* Mobile pinboard: simpler vertical, scrollable corkboard of note cards    */
 /* ----------------------------------------------------------------------- */
@@ -299,10 +327,10 @@
   height: 100%;
   overflow: hidden;
   color: var(--text-primary);
-  background-color: #100f0d;
+  background-color: #0e0d0b;
   background-image:
-    radial-gradient(circle at 50% 0%, rgba(255, 210, 120, 0.12), transparent 38%),
-    linear-gradient(145deg, #17130f 0%, #090b0d 100%);
+    radial-gradient(120% 70% at 50% -8%, rgba(214, 198, 168, 0.05), transparent 60%),
+    linear-gradient(165deg, #131210 0%, #0a0a0b 100%);
   font-family: "Inclusive Sans", sans-serif;
 }
 
@@ -315,7 +343,7 @@
   gap: 0.5rem;
   padding: 0.7rem 0.8rem;
   background: linear-gradient(180deg, rgba(16, 15, 13, 0.96), rgba(16, 15, 13, 0.78));
-  border-bottom: 1px solid rgba(255, 210, 120, 0.16);
+  border-bottom: 1px solid rgba(214, 198, 168, 0.1);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
@@ -351,18 +379,20 @@
 .pinboard-mobile-board {
   position: relative;
   text-align: center;
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 1.35rem 0.9rem 1.5rem;
-  background-color: #8a5432;
+  background-color: #6b5743;
   background-image:
-    repeating-linear-gradient(8deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 13px),
-    repeating-linear-gradient(97deg, rgba(55, 24, 10, 0.12) 0 1px, transparent 1px 17px),
-    linear-gradient(135deg, #9b623a 0%, #70401f 46%, #5c331c 100%);
-  border: clamp(9px, 3vw, 15px) solid #3a2114;
+    radial-gradient(40% 30% at 22% 18%, rgba(34, 24, 14, 0.12), transparent 70%),
+    radial-gradient(34% 26% at 80% 78%, rgba(36, 26, 16, 0.1), transparent 72%),
+    repeating-linear-gradient(7deg, rgba(232, 222, 200, 0.016) 0 1px, transparent 1px 19px),
+    repeating-linear-gradient(99deg, rgba(28, 19, 10, 0.04) 0 1px, transparent 1px 23px),
+    linear-gradient(135deg, #6f5b46 0%, #574734 52%, #453829 100%);
+  border: clamp(8px, 2.4vw, 13px) solid #3b3125;
   box-shadow:
-    0 22px 52px rgba(0, 0, 0, 0.52),
-    inset 0 0 60px rgba(45, 22, 10, 0.55),
-    inset 0 2px 0 rgba(255, 240, 190, 0.16);
+    0 16px 40px rgba(0, 0, 0, 0.4),
+    inset 0 0 90px rgba(32, 23, 13, 0.42),
+    inset 0 1px 0 rgba(228, 214, 180, 0.06);
 }
 
 .board-title-note.pinboard-mobile-title {
@@ -397,14 +427,15 @@
 .pin-card {
   position: relative;
   padding: 1.6rem 1.05rem 1.15rem;
-  color: #2d2015;
-  background-color: #f3dfb2;
+  color: #3c3428;
+  background-color: #e7ded0;
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 42%),
-    repeating-linear-gradient(0deg, transparent 0 28px, rgba(90, 60, 35, 0.08) 29px);
-  border: 1px solid rgba(84, 50, 25, 0.28);
-  border-radius: 6px;
-  box-shadow: 0 12px 24px rgba(33, 18, 8, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    radial-gradient(54% 40% at 16% 12%, rgba(120, 96, 60, 0.05), transparent 64%),
+    radial-gradient(48% 38% at 84% 84%, rgba(120, 96, 60, 0.045), transparent 66%),
+    repeating-linear-gradient(0deg, transparent 0 29px, rgba(86, 62, 36, 0.05) 30px);
+  border: 1px solid rgba(74, 58, 36, 0.22);
+  border-radius: 5px 8px 4px 7px;
+  box-shadow: 0 12px 24px rgba(28, 20, 10, 0.24), inset 0 1px 0 rgba(252, 248, 240, 0.3);
 }
 
 .pin-card:nth-child(odd) {
@@ -423,8 +454,8 @@
   width: 1rem;
   height: 1rem;
   border-radius: 999px;
-  background: radial-gradient(circle at 35% 32%, #fff7cf 0 12%, #ffd278 26%, #b07a34 70%, #4a2a16 100%);
-  box-shadow: 0 3px 6px rgba(28, 14, 5, 0.4);
+  background: radial-gradient(circle at 35% 32%, #efe6d2 0 12%, #cdb683 26%, #8a6f44 70%, #3f3120 100%);
+  box-shadow: 0 3px 6px rgba(24, 16, 8, 0.34);
 }
 
 .pin-card-badge {
@@ -457,7 +488,7 @@
   gap: 0.18rem;
   margin: 0 0 0.3rem;
   padding-right: 6.4rem;
-  color: #865225;
+  color: #7a6446;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -474,7 +505,7 @@
 
 .pin-card-subtitle {
   margin: 0.3rem 0 0;
-  color: #6f4729;
+  color: #6c5a40;
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -502,13 +533,13 @@
 }
 
 .pin-card-bullets li span:first-child {
-  color: #9c622d;
+  color: #8a7350;
 }
 
 .pin-card-link {
   display: inline-block;
   margin-top: 0.9rem;
-  color: #3c6b72;
+  color: #5e6d63;
   font-size: 0.8rem;
   font-weight: 900;
   letter-spacing: 0.08em;

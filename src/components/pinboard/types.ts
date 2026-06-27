@@ -44,6 +44,8 @@ export type DragState<Id extends string = string> = PatchPosition & {
 
 export type PinboardProps = {
   onClose: () => void;
+  /** Whether the pinboard is the active view; gates keyboard controls. Defaults to true. */
+  active?: boolean;
 };
 
 export type PinConfigBase<Id extends string = string> = {
