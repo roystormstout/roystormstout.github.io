@@ -30,6 +30,12 @@ Build for production:
 npm run build
 ```
 
+Run the full local quality gate used by CI:
+
+```bash
+npm run check
+```
+
 Regenerate optimized pin artwork after replacing source PNGs:
 
 ```bash
@@ -42,11 +48,13 @@ Preview the production build locally:
 npm run preview
 ```
 
-Deploy the built site to GitHub Pages:
+Deploy the built site to GitHub Pages manually:
 
 ```bash
 npm run deploy
 ```
+
+Pushes to `master` also deploy automatically through GitHub Actions after `npm run check` passes. In the repository settings, GitHub Pages must use **GitHub Actions** as its source.
 
 ## Project Structure
 
@@ -91,5 +99,15 @@ Run these before deploying:
 
 ```bash
 npm run lint
+npm run test
+npm run typecheck
 npm run build
 ```
+
+Or run the combined gate:
+
+```bash
+npm run check
+```
+
+The test suite currently covers pinboard layout helpers and content-data invariants, including globally unique pin IDs, complete note/card copy, and well-formed optional links.
