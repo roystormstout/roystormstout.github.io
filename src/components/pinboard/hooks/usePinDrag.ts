@@ -47,9 +47,50 @@ export default function usePinDrag({
 }: UsePinDragOptions) {
   const dragState = useRef<DragState<PatchId> | null>(null);
   const patchSizes = useRef<PatchSizes<PatchId>>({});
+  const dragFrame = useRef<number | null>(null);
+  const pendingDragUpdate = useRef<{
+    id: PatchId;
+    position: PatchPosition;
+    swing: number;
+  } | null>(null);
   const swingFrame = useRef<number | null>(null);
   const lastInteractionMoved = useRef(false);
   const [draggingPatch, setDraggingPatch] = useState<PatchId | null>(null);
+
+  const applyPendingDragUpdate = useCallback(() => {
+    const update = pendingDragUpdate.current;
+
+    dragFrame.current = null;
+    pendingDragUpdate.current = null;
+
+    if (!update) return;
+
+    setPatchPositions((positions) => ({
+      ...positions,
+      [update.id]: update.position,
+    }));
+    setPatchSwings((swings) => ({
+      ...swings,
+      [update.id]: update.swing,
+    }));
+  }, [setPatchPositions, setPatchSwings]);
+
+  const flushPendingDragUpdate = useCallback(() => {
+    if (dragFrame.current !== null) {
+      cancelAnimationFrame(dragFrame.current);
+      dragFrame.current = null;
+    }
+
+    applyPendingDragUpdate();
+  }, [applyPendingDragUpdate]);
+
+  const scheduleDragUpdate = useCallback((id: PatchId, position: PatchPosition, swing: number) => {
+    pendingDragUpdate.current = { id, position, swing };
+
+    if (dragFrame.current === null) {
+      dragFrame.current = requestAnimationFrame(applyPendingDragUpdate);
+    }
+  }, [applyPendingDragUpdate]);
 
   const stopSwing = useCallback(() => {
     if (swingFrame.current !== null) {
@@ -59,11 +100,12 @@ export default function usePinDrag({
   }, []);
 
   const resetDrag = useCallback(() => {
+    flushPendingDragUpdate();
     stopSwing();
     dragState.current = null;
     lastInteractionMoved.current = false;
     setDraggingPatch(null);
-  }, [stopSwing]);
+  }, [flushPendingDragUpdate, stopSwing]);
 
   const settleSwing = useCallback((id: PatchId, startSwing: number) => {
     if (reduceMotion) {
@@ -126,17 +168,11 @@ export default function usePinDrag({
       drag.lastClientY = event.clientY;
       drag.lastTime = now;
 
-      setPatchPositions((positions) => ({
-        ...positions,
-        [drag.id]: {
-          x: nextX,
-          y: nextY,
-        },
-      }));
-      setPatchSwings((swings) => ({
-        ...swings,
-        [drag.id]: reduceMotion ? 0 : clamp(drag.velocityX * SWING_FORCE, -MAX_SWING, MAX_SWING),
-      }));
+      scheduleDragUpdate(
+        drag.id,
+        { x: nextX, y: nextY },
+        reduceMotion ? 0 : clamp(drag.velocityX * SWING_FORCE, -MAX_SWING, MAX_SWING),
+      );
 
       const openPin = selectedPinsRef.current[drag.side];
       if (openPin?.id === drag.id && openPin.side === drag.side) {
@@ -153,6 +189,7 @@ export default function usePinDrag({
       const drag = dragState.current;
 
       if (drag) {
+        flushPendingDragUpdate();
         stopSwing();
         const swing = reduceMotion ? 0 : clamp(drag.velocityX * SWING_FORCE, -MAX_SWING, MAX_SWING);
         settleSwing(drag.id, swing);
@@ -185,9 +222,10 @@ export default function usePinDrag({
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
       window.removeEventListener('pointercancel', handlePointerUp);
+      flushPendingDragUpdate();
       stopSwing();
     };
-  }, [attachPinToNote, boardRef, clearSelectedPin, isPointInsideNote, reduceMotion, selectedPinsRef, setPatchPositions, setPatchSwings, settleSwing, stopSwing]);
+  }, [attachPinToNote, boardRef, clearSelectedPin, flushPendingDragUpdate, isPointInsideNote, reduceMotion, scheduleDragUpdate, selectedPinsRef, settleSwing, stopSwing]);
 
   const startDragging = useCallback((side: BoardSide, id: PatchId, event: ReactPointerEvent<HTMLElement>) => {
     if (isSwitchingRef.current) return;
