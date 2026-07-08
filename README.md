@@ -36,6 +36,12 @@ Run the full local quality gate used by CI:
 npm run check
 ```
 
+Validate pinboard content and image assets:
+
+```bash
+npm run validate:content
+```
+
 Regenerate optimized pin artwork after replacing source PNGs:
 
 ```bash
@@ -110,4 +116,4 @@ Or run the combined gate:
 npm run check
 ```
 
-The test suite currently covers pinboard layout helpers and content-data invariants, including globally unique pin IDs, complete note/card copy, and well-formed optional links.
+The content validator checks pinboard data, image imports, source PNGs, optimized WebP files, unique pin IDs, complete note/card copy, and well-formed optional links. The test suite covers pinboard layout helpers and content-data invariants.

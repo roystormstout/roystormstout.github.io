@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "test": "vitest run",
-    "check": "npm run lint && npm run test && npm run build",
+    "validate:content": "node scripts/validate-content.mjs",
+    "check": "npm run lint && npm run validate:content && npm run test && npm run build",
     "optimize:pins": "node scripts/optimize-pins.mjs",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
