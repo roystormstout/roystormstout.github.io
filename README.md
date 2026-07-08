@@ -54,7 +54,7 @@ Deploy the built site to GitHub Pages manually:
 npm run deploy
 ```
 
-Pushes to `master` also deploy automatically through GitHub Actions after `npm run check` passes. In the repository settings, GitHub Pages must use **GitHub Actions** as its source.
+Pushes to `main` also deploy automatically through GitHub Actions after `npm run check` passes. In the repository settings, GitHub Pages must use **GitHub Actions** as its source.
 
 ## Project Structure
 
