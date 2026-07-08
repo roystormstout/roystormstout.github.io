@@ -12,17 +12,17 @@ export default function Bio({ onOpenPinboard, onPreloadPinboard }: BioProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const lastMouse = useRef<{ x: number; y: number } | null>(null);
   const rafId = useRef<number | null>(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= MOBILE_BREAKPOINT);
+  const mobileQuery = `(max-width: ${MOBILE_BREAKPOINT}px)`;
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia(mobileQuery).matches);
   const reduceMotion = usePrefersReducedMotion();
 
   useEffect(() => {
-    function handleResize() {
-      setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
-    }
+    const mediaQuery = window.matchMedia(mobileQuery);
+    const handleChange = (event: MediaQueryListEvent) => setIsMobile(event.matches);
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [mobileQuery]);
 
   useEffect(() => {
     if (isMobile || reduceMotion) return;
@@ -92,7 +92,6 @@ export default function Bio({ onOpenPinboard, onPreloadPinboard }: BioProps) {
             className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-bold bg-clip-text relative z-20"
             style={{
               color: 'var(--text-primary)',
-              willChange: 'transform',
             }}
           >
             ROY GUO
@@ -101,7 +100,6 @@ export default function Bio({ onOpenPinboard, onPreloadPinboard }: BioProps) {
             className="text-4xl sm:text-5xl md:text-7xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10"
             style={{
               color: 'var(--text-tertiary)',
-              willChange: 'transform',
             }}
           >
             DEV
@@ -110,7 +108,6 @@ export default function Bio({ onOpenPinboard, onPreloadPinboard }: BioProps) {
             className="text-4xl sm:text-5xl md:text-7xl lg:text-[12rem] xl:text-[15rem] 2xl:text-[18rem] leading-[0.7] font-semibold relative z-10"
             style={{
               color: 'var(--text-tertiary)',
-              willChange: 'transform',
             }}
           >
             CREATOR
