@@ -29,7 +29,11 @@ function PinCard({ pin }: { pin: PinConfig }) {
   return (
     <article className="pin-card">
       <div className="pin-card-badge">
-        <img src={pin.image} alt="" aria-hidden draggable={false} loading="lazy" decoding="async" />
+        <picture>
+          <source type="image/avif" srcSet={pin.image.avifSrcSet} sizes={pin.image.sizes} />
+          <source type="image/webp" srcSet={pin.image.webpSrcSet} sizes={pin.image.sizes} />
+          <img src={pin.image.src} alt="" aria-hidden draggable={false} loading="lazy" decoding="async" />
+        </picture>
       </div>
       <div className="pin-card-note">
         <p className="pin-card-eyebrow">

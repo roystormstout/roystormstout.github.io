@@ -1,17 +1,41 @@
-import XboxPin from '../../assets/pins/optimized/xbox-pin.webp';
-import AzurePin from '../../assets/pins/optimized/azure-pin.webp';
-import MahjongAiPin from '../../assets/pins/optimized/mahjong-ai-pin.webp';
-import FilmResearchPin from '../../assets/pins/optimized/film-research-pin.webp';
-import MagePin from '../../assets/pins/optimized/mage-pin.webp';
-import RcCarPin from '../../assets/pins/optimized/rc-car-pin.webp';
-import HappyEndingPin from '../../assets/pins/optimized/happy-ending-pin.webp';
-import type { BoardSide, PinConfigBase } from './types';
+import type { BoardSide, PinConfigBase, PinImageSet } from './types';
+
+const pinImageWidths = [320, 480, 640] as const;
+const optimizedPinAssets = import.meta.glob('../../assets/pins/optimized/*.{avif,webp}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+}) as Record<string, string>;
+
+function getOptimizedPinAsset(baseName: string, width: number, extension: 'avif' | 'webp'): string {
+  const assetPath = `../../assets/pins/optimized/${baseName}-${width}.${extension}`;
+  const asset = optimizedPinAssets[assetPath];
+
+  if (!asset) {
+    throw new Error(`Missing optimized pin asset: ${assetPath}`);
+  }
+
+  return asset;
+}
+
+function getPinImage(baseName: string): PinImageSet {
+  const buildSrcSet = (extension: 'avif' | 'webp') => pinImageWidths
+    .map((width) => `${getOptimizedPinAsset(baseName, width, extension)} ${width}w`)
+    .join(', ');
+
+  return {
+    src: getOptimizedPinAsset(baseName, 640, 'webp'),
+    avifSrcSet: buildSrcSet('avif'),
+    webpSrcSet: buildSrcSet('webp'),
+    sizes: '(max-width: 768px) 9rem, clamp(5.5rem, 16vw, 12.5rem)',
+  };
+}
 
 export const boardPins = {
   work: [
     {
       id: 'azure',
-      image: AzurePin,
+      image: getPinImage('azure-pin'),
       size: 'md',
       initialRotate: 6,
       hoverRotate: -2,
@@ -24,7 +48,7 @@ export const boardPins = {
     },
     {
       id: 'xbox',
-      image: XboxPin,
+      image: getPinImage('xbox-pin'),
       size: 'md',
       initialRotate: 10,
       hoverRotate: 5,
@@ -39,7 +63,7 @@ export const boardPins = {
   research: [
     {
       id: 'paper',
-      image: FilmResearchPin,
+      image: getPinImage('film-research-pin'),
       size: 'md',
       initialRotate: -8,
       hoverRotate: -3,
@@ -54,7 +78,7 @@ export const boardPins = {
     },
     {
       id: 'mahjong',
-      image: MahjongAiPin,
+      image: getPinImage('mahjong-ai-pin'),
       size: 'sm',
       initialRotate: 6,
       hoverRotate: -2,
@@ -69,7 +93,7 @@ export const boardPins = {
     },
     {
       id: 'ironman',
-      image: RcCarPin,
+      image: getPinImage('rc-car-pin'),
       size: 'md',
       initialRotate: -4,
       hoverRotate: 2,
@@ -86,7 +110,7 @@ export const boardPins = {
   play: [
     {
       id: 'killstreak',
-      image: MagePin,
+      image: getPinImage('mage-pin'),
       size: 'md',
       initialRotate: 7,
       hoverRotate: 2,
@@ -101,7 +125,7 @@ export const boardPins = {
     },
     {
       id: 'happyEnding',
-      image: HappyEndingPin,
+      image: getPinImage('happy-ending-pin'),
       size: 'sm',
       initialRotate: -8,
       hoverRotate: -2,

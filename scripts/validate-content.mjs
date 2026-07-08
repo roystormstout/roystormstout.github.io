@@ -1,4 +1,4 @@
-import { access, readdir, readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
@@ -10,6 +10,8 @@ const pinsDir = path.join(repoRoot, 'src', 'assets', 'pins');
 const optimizedPinsDir = path.join(pinsDir, 'optimized');
 const expectedBoardSides = new Set(['work', 'research', 'play']);
 const expectedPinSizes = new Set(['sm', 'md', 'lg']);
+const expectedOptimizedWidths = new Set(['320', '480', '640']);
+const expectedOptimizedFormats = new Set(['avif', 'webp']);
 const requiredStringFields = ['id', 'title', 'year', 'subtitle', 'description'];
 
 const errors = [];
@@ -98,33 +100,6 @@ function findBoardPinsInitializer(sourceFile) {
   return null;
 }
 
-function getWebpImports(sourceFile) {
-  const imports = new Map();
-
-  for (const statement of sourceFile.statements) {
-    if (!ts.isImportDeclaration(statement)) continue;
-    if (!ts.isStringLiteral(statement.moduleSpecifier)) continue;
-
-    const importName = statement.importClause?.name?.text;
-    const importPath = statement.moduleSpecifier.text;
-
-    if (importName && importPath.endsWith('.webp')) {
-      imports.set(importName, importPath);
-    }
-  }
-
-  return imports;
-}
-
-async function pathExists(filePath) {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 async function getFilesByExtension(directory, extension) {
   const entries = await readdir(directory, { withFileTypes: true });
 
@@ -134,7 +109,17 @@ async function getFilesByExtension(directory, extension) {
     .sort();
 }
 
-function validatePin(sourceFile, side, pinExpression, webpImports, usedIds, usedImportNames) {
+function readPinImageBaseName(expression) {
+  const value = unwrapExpression(expression);
+
+  if (!ts.isCallExpression(value)) return null;
+  if (!ts.isIdentifier(value.expression) || value.expression.text !== 'getPinImage') return null;
+  if (value.arguments.length !== 1) return null;
+
+  return readStringLiteral(value.arguments[0]);
+}
+
+function validatePin(sourceFile, side, pinExpression, usedIds, usedImageBasenames) {
   if (!ts.isObjectLiteralExpression(pinExpression)) {
     report(`${formatNodeLocation(sourceFile, pinExpression)}: ${side} pin must be an object literal.`);
     return;
@@ -173,13 +158,11 @@ function validatePin(sourceFile, side, pinExpression, webpImports, usedIds, used
     }
   }
 
-  const imageExpression = properties.get('image') ? unwrapExpression(properties.get('image')) : null;
-  if (!imageExpression || !ts.isIdentifier(imageExpression)) {
-    report(`${context}: ${side}/${id || '<missing-id>'} image must reference an imported WebP asset.`);
-  } else if (!webpImports.has(imageExpression.text)) {
-    report(`${context}: ${side}/${id || '<missing-id>'} image import '${imageExpression.text}' is not a WebP import.`);
+  const imageBaseName = properties.get('image') ? readPinImageBaseName(properties.get('image')) : null;
+  if (!imageBaseName?.trim()) {
+    report(`${context}: ${side}/${id || '<missing-id>'} image must call getPinImage('<source-png-basename>').`);
   } else {
-    usedImportNames.add(imageExpression.text);
+    usedImageBasenames.add(imageBaseName);
   }
 
   const anchorExpression = properties.get('anchor') ? unwrapExpression(properties.get('anchor')) : null;
@@ -222,14 +205,14 @@ function validatePin(sourceFile, side, pinExpression, webpImports, usedIds, used
   }
 }
 
-function validateBoardPins(sourceFile, boardPinsExpression, webpImports) {
+function validateBoardPins(sourceFile, boardPinsExpression) {
   if (!boardPinsExpression || !ts.isObjectLiteralExpression(boardPinsExpression)) {
     report(`${path.relative(repoRoot, dataPath)}: boardPins must be an object literal.`);
-    return { usedImportNames: new Set() };
+    return { usedImageBasenames: new Set() };
   }
 
   const usedIds = new Set();
-  const usedImportNames = new Set();
+  const usedImageBasenames = new Set();
   const boardProperties = getObjectProperties(boardPinsExpression);
 
   for (const side of expectedBoardSides) {
@@ -251,65 +234,76 @@ function validateBoardPins(sourceFile, boardPinsExpression, webpImports) {
     }
 
     for (const pin of pins.elements) {
-      validatePin(sourceFile, side, unwrapExpression(pin), webpImports, usedIds, usedImportNames);
+      validatePin(sourceFile, side, unwrapExpression(pin), usedIds, usedImageBasenames);
     }
   }
 
-  for (const importName of webpImports.keys()) {
-    if (!usedImportNames.has(importName)) {
-      report(`${path.relative(repoRoot, dataPath)}: WebP import '${importName}' is not used by boardPins.`);
-    }
-  }
-
-  return { usedImportNames };
+  return { usedImageBasenames };
 }
 
-async function validateAssetFiles(sourceFile, webpImports, usedImportNames) {
-  const dataDir = path.dirname(sourceFile.fileName);
+async function validateAssetFiles(usedImageBasenames) {
   const sourcePngFiles = await getFilesByExtension(pinsDir, '.png');
   const optimizedWebpFiles = await getFilesByExtension(optimizedPinsDir, '.webp');
+  const optimizedAvifFiles = await getFilesByExtension(optimizedPinsDir, '.avif');
   const sourceBasenames = new Set(sourcePngFiles.map((fileName) => path.basename(fileName, '.png')));
-  const optimizedBasenames = new Set(optimizedWebpFiles.map((fileName) => path.basename(fileName, '.webp')));
-  const usedOptimizedFiles = new Set();
+  const optimizedFiles = [...optimizedWebpFiles, ...optimizedAvifFiles];
 
-  for (const importName of usedImportNames) {
-    const importPath = webpImports.get(importName);
-    const resolvedImportPath = path.resolve(dataDir, importPath);
-    const fileName = path.basename(importPath);
-
-    usedOptimizedFiles.add(fileName);
-
-    if (!await pathExists(resolvedImportPath)) {
-      report(`${path.relative(repoRoot, dataPath)}: image import '${importName}' points to missing file ${importPath}.`);
+  for (const imageBaseName of usedImageBasenames) {
+    if (!sourceBasenames.has(imageBaseName)) {
+      report(`${path.relative(repoRoot, dataPath)}: getPinImage('${imageBaseName}') has no matching src/assets/pins/${imageBaseName}.png.`);
     }
   }
 
   for (const sourceBase of sourceBasenames) {
-    if (!optimizedBasenames.has(sourceBase)) {
-      report(`src/assets/pins/${sourceBase}.png is missing optimized/${sourceBase}.webp. Run npm run optimize:pins.`);
+    if (!usedImageBasenames.has(sourceBase)) {
+      report(`src/assets/pins/${sourceBase}.png is not referenced by boardPins.`);
+    }
+
+    for (const width of expectedOptimizedWidths) {
+      for (const format of expectedOptimizedFormats) {
+        const optimizedFile = `${sourceBase}-${width}.${format}`;
+
+        if (!optimizedFiles.includes(optimizedFile)) {
+          report(`src/assets/pins/${sourceBase}.png is missing optimized/${optimizedFile}. Run npm run optimize:pins.`);
+        }
+      }
     }
   }
 
-  for (const optimizedBase of optimizedBasenames) {
-    if (!sourceBasenames.has(optimizedBase)) {
-      report(`src/assets/pins/optimized/${optimizedBase}.webp has no matching source ${optimizedBase}.png.`);
-    }
-  }
+  for (const optimizedFile of optimizedFiles) {
+    const match = optimizedFile.match(/^(.+)-(\d+)\.(avif|webp)$/);
 
-  for (const optimizedFile of optimizedWebpFiles) {
-    if (!usedOptimizedFiles.has(optimizedFile)) {
+    if (!match) {
+      report(`src/assets/pins/optimized/${optimizedFile} does not match <source-basename>-<width>.<avif|webp>.`);
+      continue;
+    }
+
+    const [, sourceBase, width, format] = match;
+
+    if (!sourceBasenames.has(sourceBase)) {
+      report(`src/assets/pins/optimized/${optimizedFile} has no matching source ${sourceBase}.png.`);
+    }
+
+    if (!usedImageBasenames.has(sourceBase)) {
       report(`src/assets/pins/optimized/${optimizedFile} is not referenced by boardPins.`);
+    }
+
+    if (!expectedOptimizedWidths.has(width)) {
+      report(`src/assets/pins/optimized/${optimizedFile} uses unexpected width ${width}.`);
+    }
+
+    if (!expectedOptimizedFormats.has(format)) {
+      report(`src/assets/pins/optimized/${optimizedFile} uses unexpected format ${format}.`);
     }
   }
 }
 
 const dataSource = await readFile(dataPath, 'utf8');
 const sourceFile = ts.createSourceFile(dataPath, dataSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-const webpImports = getWebpImports(sourceFile);
 const boardPinsExpression = findBoardPinsInitializer(sourceFile);
-const { usedImportNames } = validateBoardPins(sourceFile, boardPinsExpression, webpImports);
+const { usedImageBasenames } = validateBoardPins(sourceFile, boardPinsExpression);
 
-await validateAssetFiles(sourceFile, webpImports, usedImportNames);
+await validateAssetFiles(usedImageBasenames);
 
 if (errors.length > 0) {
   console.error('Content validation failed:');
@@ -321,4 +315,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`Content validation passed for ${usedImportNames.size} pin assets.`);
+console.log(`Content validation passed for ${usedImageBasenames.size} pin assets.`);

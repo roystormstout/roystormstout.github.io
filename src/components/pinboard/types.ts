@@ -48,9 +48,16 @@ export type PinboardProps = {
   active?: boolean;
 };
 
+export type PinImageSet = {
+  src: string;
+  avifSrcSet: string;
+  webpSrcSet: string;
+  sizes: string;
+};
+
 export type PinConfigBase<Id extends string = string> = {
   id: Id;
-  image: string;
+  image: PinImageSet;
   size: 'sm' | 'md' | 'lg';
   initialRotate: number;
   hoverRotate: number;

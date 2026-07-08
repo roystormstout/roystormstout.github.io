@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
+import type { PinImageSet } from './pinboard/types';
 
 type Size = 'sm' | 'md' | 'lg';
 
 type Props = {
-  image: string;
+  image: PinImageSet;
   initialRotate?: number;
   hoverRotate?: number;
   alt?: string;
@@ -83,25 +84,29 @@ export default function DecorativePatch({
 
   const content = (
     <>
-      <img
-        src={image}
-        alt={alt}
-        aria-hidden
-        draggable={false}
-        decoding="async"
-        className="w-full h-auto"
-        style={{
-          transition: 'transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), filter 180ms ease',
-          transform: imageTransform,
-          filter: boardShadow
-            ? `drop-shadow(${shadowOffsetX}px ${isDragging ? 22 : 12}px ${isDragging ? 20 : 10}px rgba(0, 0, 0, ${isDragging ? 0.5 : 0.32}))`
-            : undefined,
-          pointerEvents: 'none',
-          transformStyle: 'preserve-3d',
-          transformOrigin: '50% 12%',
-          willChange: draggable ? 'transform, filter' : 'auto',
-        }}
-      />
+      <picture>
+        <source type="image/avif" srcSet={image.avifSrcSet} sizes={image.sizes} />
+        <source type="image/webp" srcSet={image.webpSrcSet} sizes={image.sizes} />
+        <img
+          src={image.src}
+          alt={alt}
+          aria-hidden
+          draggable={false}
+          decoding="async"
+          className="w-full h-auto"
+          style={{
+            transition: 'transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), filter 180ms ease',
+            transform: imageTransform,
+            filter: boardShadow
+              ? `drop-shadow(${shadowOffsetX}px ${isDragging ? 22 : 12}px ${isDragging ? 20 : 10}px rgba(0, 0, 0, ${isDragging ? 0.5 : 0.32}))`
+              : undefined,
+            pointerEvents: 'none',
+            transformStyle: 'preserve-3d',
+            transformOrigin: '50% 12%',
+            willChange: draggable ? 'transform, filter' : 'auto',
+          }}
+        />
+      </picture>
     </>
   );
 
